@@ -1,7 +1,6 @@
 package com.example.trainhub.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,10 +35,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun setUpUI(view: View) {
-        emailEditText = view.findViewById(R.id.etLoginEmail)
-        passwordEditText = view.findViewById(R.id.etLoginPassword)
-        loginButton = view.findViewById(R.id.btnLogin)
-        errorLoginTextView = view.findViewById(R.id.tvLoginError)
+        emailEditText = view.findViewById(R.id.etRegisterEmail)
+        passwordEditText = view.findViewById(R.id.etRegisterPassword)
+        loginButton = view.findViewById(R.id.btnRegister)
+        errorLoginTextView = view.findViewById(R.id.tvRegisterError)
         signUpTextView = view.findViewById(R.id.tvLoginSignUp)
         val action = Navigation.createNavigateOnClickListener(R.id.action_loginFragment_to_signUpFragment)
         signUpTextView?.setOnClickListener(action)
