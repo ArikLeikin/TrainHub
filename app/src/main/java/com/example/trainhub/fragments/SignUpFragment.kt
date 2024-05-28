@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.navigation.Navigation
 import com.example.trainhub.R
 
 class SignUpFragment : Fragment() {
@@ -33,6 +34,7 @@ class SignUpFragment : Fragment() {
             val email = emailEditText?.text.toString()
             val password = passwordEditText?.text.toString()
             // Your login/signup logic here
+            Navigation.findNavController(view).navigate(R.id.loginFragment)
         }
 
     }
