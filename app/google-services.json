@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "762699371302",
+    "project_id": "workoutapp-c040a",
+    "storage_bucket": "workoutapp-c040a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762699371302:android:89a5b712434c1ccc8367e7",
+        "android_client_info": {
+          "package_name": "com.example.trainhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs61KgZJTzSHIojRfJEYiGEiNgZ86P9i8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
