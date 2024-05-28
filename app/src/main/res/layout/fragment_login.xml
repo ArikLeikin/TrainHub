@@ -56,12 +56,12 @@
         android:id="@+id/btnLogin"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="550dp"
         android:layout_marginStart="100dp"
+        android:layout_marginTop="560dp"
+        android:backgroundTint="@color/black"
         android:text="@string/login"
         android:textColor="@color/white"
-        android:textSize="23sp"
-        android:backgroundTint="@color/black" />
+        android:textSize="23sp" />
 
     <TextView
         android:id="@+id/tvDontHaveAccount"
@@ -84,7 +84,7 @@
         android:minHeight="48dp"
         android:onClick="signUp"
         android:text="@string/signup"
-        android:textColor="@color/white"
+        android:textColor="@color/blue"
         android:textSize="23sp" />
 
     <TextView
