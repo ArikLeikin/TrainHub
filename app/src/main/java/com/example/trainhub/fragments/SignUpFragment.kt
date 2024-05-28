@@ -16,6 +16,7 @@ class SignUpFragment : Fragment() {
     private var emailEditText: EditText? = null
     private var passwordEditText: EditText? = null
     private var errorLoginTextView: TextView? = null
+    private var registerButton: Button? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,8 +31,8 @@ class SignUpFragment : Fragment() {
         emailEditText = view.findViewById(R.id.etRegisterEmail)
         passwordEditText = view.findViewById(R.id.etRegisterPassword)
         errorLoginTextView = view.findViewById(R.id.tvRegisterError)
-
-        view.findViewById<Button>(R.id.btnRegister).setOnClickListener {
+        registerButton = view.findViewById(R.id.btnRegister)
+        registerButton?.setOnClickListener {
             val email = emailEditText?.text.toString()
             val password = passwordEditText?.text.toString()
             // Your login/signup logic here
