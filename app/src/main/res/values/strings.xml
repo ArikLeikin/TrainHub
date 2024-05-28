@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">TrainHub</string>
+    <string name="app_name">TrainHub App</string>
+    <string name="background_app">Background</string>
+    <string name="logo_app">logo</string>
+    <string name="sign_up">Sign Up user</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="already_have_an_account_sign_in">Already have an account? Sign In</string>
+    <string name="create_an_account">Create an account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account?</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
 </resources>
