@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.navigation.Navigation
 import com.example.trainhub.R
+import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginFragment : Fragment() {
@@ -19,6 +20,7 @@ class LoginFragment : Fragment() {
     private var loginButton: Button? = null
     private var errorLoginTextView: TextView? = null
     private var signUpTextView:TextView? = null
+//    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
