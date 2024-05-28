@@ -6,4 +6,5 @@
     <color name="red">#FF0000</color>
     <color name="colorPrimary">#FF5722</color>
     <color name="colorHintText">#cccccc</color>
+    <color name="blue">#65B6F6</color>
 </resources>
