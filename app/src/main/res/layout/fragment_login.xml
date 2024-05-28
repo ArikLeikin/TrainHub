@@ -27,7 +27,7 @@
         android:background="@drawable/background" />
 
     <EditText
-        android:id="@+id/etRegisterEmail"
+        android:id="@+id/etLoginEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="400dp"
@@ -40,7 +40,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/etRegisterPassword"
+        android:id="@+id/etLoginPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="450dp"
@@ -53,7 +53,7 @@
         android:autofillHints="" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnLogin"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -88,7 +88,7 @@
         android:textSize="23sp" />
 
     <TextView
-        android:id="@+id/tvRegisterError"
+        android:id="@+id/tvLoginError"
         android:layout_width="311dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
