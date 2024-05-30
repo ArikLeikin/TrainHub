@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import com.example.trainhub.models.fireBaseModels.UserFireBaseModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.protobuf.Internal.BooleanList
 import java.util.Date
 import java.util.concurrent.CountDownLatch
@@ -21,6 +22,7 @@ class UserFirebaseModelTask {
     private val latch = CountDownLatch(1)
     private val uid: String? = null
     private val user: User? = null
+    private var userAuth: FirebaseUser?= null
 
     @Test
     fun addition_isCorrect() {
@@ -35,6 +37,7 @@ class UserFirebaseModelTask {
 
         userFbModel.register(email, password) { uidResult ->
             println("======= Success UID: $uidResult")
+//            userAuth = result
             uid = uidResult
             latch.countDown()
         }
@@ -64,7 +67,7 @@ class UserFirebaseModelTask {
         val newUser = User(
             id = "testUid",
             email = email,
-            password = password,
+//            password = password,
             profileImageUrl = "test_profile_image_url",
             lastUpdated = System.currentTimeMillis()
         )
@@ -91,7 +94,7 @@ class UserFirebaseModelTask {
         var result: String? = null
 
         userFbModel.register(email, password) {
-            result = it
+//            result = it
             latch.countDown()
         }
 
@@ -103,10 +106,19 @@ class UserFirebaseModelTask {
     @Test
     fun testDeleteUserAuth(){
         var result: Boolean = false
+        val latch = CountDownLatch(1)
         userFbModel.deleteUserAuth() {
             result = true
+            latch.countDown()
         }
+        latch.await(5, TimeUnit.SECONDS)
         assertEquals(true, result)
+    }
+
+    @Test
+    fun f(){
+        testRegisterSuccess()
+        testDeleteUserAuth()
     }
 
 }
