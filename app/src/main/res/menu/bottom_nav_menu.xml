@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/HomeFragment"
+            android:title="Home"
+            android:icon="@drawable/ic_home" />
+        <item
+            android:id="@+id/DiscoverFragment"
+            android:title="Discover"
+            android:icon="@drawable/ic_search" />
+        <item
+            android:id="@+id/AddPostFragment"
+            android:title="Add Post"
+            android:icon="@drawable/ic_plus" />
+
+        <item
+            android:id="@+id/LocationFragment"
+            android:title="Location"
+            android:icon="@drawable/ic_location" />
+        <item
+            android:id="@+id/ProfileFragment"
+            android:title="Profile"
+            android:icon="@drawable/ic_profile" />
+    </group>
+</menu>
