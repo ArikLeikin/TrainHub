@@ -1,35 +1,35 @@
 package com.example.trainhub.models.entities
 
+import android.content.Context
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.trainhub.TrainHubApplication
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 
 @Entity(tableName = "users")
 data class User(@PrimaryKey var id:String,
                 var email: String,
-                var password: String,
                 var profileImageUrl: String,
-                var posts:MutableList<String>?=null, //posts id's
+                var posts:List<String>?=null, //posts id's
                 var lastUpdated: Long?=null){
     companion object {
 
-//        var lastUpdated: Long
-//            get() {
-//                return MyApplication.Globals
-//                    .appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
-//                    ?.getLong(GET_LAST_UPDATED, 0) ?: 0
-//            }
-//            set(value) {
-//                MyApplication.Globals
-//                    ?.appContext
-//                    ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.edit()
-//                    ?.putLong(GET_LAST_UPDATED, value)?.apply()
-//            }
+        var lastUpdated: Long
+            get() {
+                return TrainHubApplication.Globals
+                    .appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    ?.getLong(GET_LAST_UPDATED, 0) ?: 0
+            }
+            set(value) {
+                TrainHubApplication.Globals
+                    ?.appContext
+                    ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.edit()
+                    ?.putLong(GET_LAST_UPDATED, value)?.apply()
+            }
 
 
         const val ID_KEY = "id"
-        const val PASSWORD_KEY = "password"
         const val EMAIL_KEY = "email"
         const val PROFILE_IMAGE_URL_KEY = "profileImageUrl"
         const val LAST_UPDATED = "lastUpdated"
@@ -38,10 +38,9 @@ data class User(@PrimaryKey var id:String,
         fun fromJSON(json: Map<String, Any>): User {
             val id = json[ID_KEY] as? String ?: ""
             val email = json[EMAIL_KEY] as? String ?: ""
-            val password = json[PASSWORD_KEY] as? String ?: ""
             val profileImageUrl = json[PROFILE_IMAGE_URL_KEY] as? String ?: ""
 
-            val user = User(id,email,password,profileImageUrl)
+            val user = User(id,email,profileImageUrl)
 
             val timestamp: Timestamp? = json[LAST_UPDATED] as? Timestamp
             timestamp?.let {
@@ -58,7 +57,6 @@ data class User(@PrimaryKey var id:String,
                 ID_KEY to id,
                 EMAIL_KEY to email,
                 PROFILE_IMAGE_URL_KEY to profileImageUrl,
-                PASSWORD_KEY to password,
                 LAST_UPDATED to FieldValue.serverTimestamp()
             )
         }
