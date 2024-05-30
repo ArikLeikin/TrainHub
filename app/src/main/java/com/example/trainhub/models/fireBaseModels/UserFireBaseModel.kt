@@ -33,15 +33,15 @@ class UserFireBaseModel: FirebaseModel() {
     }
 
 
-    fun signIn(email: String, password: String, callback: (String?) -> Unit){
+    fun signIn(email: String, password: String, callback: (Boolean) -> Unit){
         auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task ->
             if (task.isSuccessful) {
                 val uid = auth.currentUser?.uid
                 Log.d(TAG, "signInWithEmail:success, UID: $uid")
-                callback(uid)
+                callback(true)
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
-                callback(null)
+                callback(false)
             }
         }
     }
@@ -61,15 +61,27 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
-    fun addUser(user:User, callback: (Boolean) -> Unit){
+    fun addUserDocument(user:User, callback: (Boolean) -> Unit){
         db.collection(USERS_COLLECTION_PATH).document(user.id).set(user.json).addOnCompleteListener { task ->
             if(task.isSuccessful){
-                Log.d(TAG, "addUser:success")
+                Log.i(TAG, "addUser:success")
                 callback(true)
             }else{
-                Log.d(TAG, "addUser:success")
+                Log.d(TAG, "addUser:failed", task.exception)
                 callback(false)
             }
         }
     }
+
+    fun deleteUserAuth(callback: (Boolean) -> Unit){
+        auth.currentUser?.delete()?.addOnCompleteListener{ task ->
+            if(task.isSuccessful){
+                Log.i(TAG, "deleteUserAuth:success")
+                callback(true)
+            }else{
+                callback(false)
+            }
+        }
+    }
+
 }
