@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FieldValue
 data class User(@PrimaryKey var id:String,
                 var email: String,
                 var profileImageUrl: String,
-                var posts:List<String>?=null, //posts id's
+//                var posts:List<String>?=null, //posts id's
                 var lastUpdated: Long?=null){
     companion object {
 
