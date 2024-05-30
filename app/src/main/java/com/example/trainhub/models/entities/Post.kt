@@ -14,6 +14,35 @@ data class Post(@PrimaryKey var id:String,
                 var lastUpdated: Long?=null){
 
         //TODO POST entity
+        companion object {
+            const val ID_KEY = "id"
+            const val TITLE_KEY = "title"
+            const val DESCRIPTION_KEY = "description"
+            const val IMAGE_URL_KEY = "imageUrl"
+            const val USER_ID_KEY = "userId"
+            const val WORKOUT_CATEGORY_KEY = "workoutCategory"
+            const val LOCATION_KEY = "location"
+            const val LAST_UPDATED = "lastUpdated"
+
+            fun fromJSON(json: Map<String, Any>): Post {
+                val id = json[ID_KEY] as? String ?: ""
+                val title = json[TITLE_KEY] as? String ?: ""
+                val description = json[DESCRIPTION_KEY] as? String ?: ""
+                val imageUrl = json[IMAGE_URL_KEY] as? String ?: ""
+                val userId = json[USER_ID_KEY] as? String ?: ""
+                val workoutCategory = json[WORKOUT_CATEGORY_KEY] as? String ?: ""
+                val location = json[LOCATION_KEY] as? String ?: ""
+
+                val post = Post(id,title,description,imageUrl,userId,workoutCategory,location)
+
+                val timestamp: Long? = json[LAST_UPDATED] as? Long
+                timestamp?.let {
+                    post.lastUpdated = it
+                }
+
+                return post
+            }
+        }
 
 
 }
