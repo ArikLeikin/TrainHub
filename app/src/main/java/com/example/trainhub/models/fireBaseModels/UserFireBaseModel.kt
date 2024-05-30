@@ -2,7 +2,6 @@ package com.example.trainhub.models.fireBaseModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.example.trainhub.model.FirebaseModel
 import com.example.trainhub.models.entities.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -18,20 +17,21 @@ class UserFireBaseModel: FirebaseModel() {
         const val USERS_COLLECTION_PATH = "users"
     }
 
-    fun register(email: String, password: String, callback: (Boolean) -> Unit) {
+    fun register(email: String, password: String, callback: (String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // User registration successful
-                    callback(true)
+                    val uid =  auth.currentUser?.uid
+                    Log.i(TAG,"Registration success UID: $uid")
+                    callback(uid)
                 } else {
-                    // User registration failed
                     val exception = task.exception
                     println("Registration failed: ${exception?.message}")
-                    callback(false)
+                    callback(null)
                 }
             }
     }
+
 
     fun signIn(email: String, password: String, callback: (String?) -> Unit){
         auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{ task ->
