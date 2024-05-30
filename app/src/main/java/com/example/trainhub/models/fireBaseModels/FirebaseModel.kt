@@ -1,4 +1,4 @@
-package com.example.trainhub.model
+package com.example.trainhub.models.fireBaseModels
 
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
