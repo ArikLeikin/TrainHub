@@ -2,6 +2,8 @@ package com.example.trainhub.models.entities
 
 import androidx.room.PrimaryKey
 import androidx.room.Entity
+import com.google.firebase.firestore.FieldValue
+import java.io.Serializable
 
 @Entity(tableName = "posts")
 data class Post(@PrimaryKey var id:String,
@@ -11,7 +13,7 @@ data class Post(@PrimaryKey var id:String,
                 var userId: String,
                 var workoutCategory: String,
                 var location: String,
-                var lastUpdated: Long?=null){
+                var lastUpdated: Long?=null):Serializable{
 
         //TODO POST entity
         companion object {
@@ -24,24 +26,36 @@ data class Post(@PrimaryKey var id:String,
             const val LOCATION_KEY = "location"
             const val LAST_UPDATED = "lastUpdated"
 
-            fun fromJSON(json: Map<String, Any>): Post {
-                val id = json[ID_KEY] as? String ?: ""
-                val title = json[TITLE_KEY] as? String ?: ""
-                val description = json[DESCRIPTION_KEY] as? String ?: ""
-                val imageUrl = json[IMAGE_URL_KEY] as? String ?: ""
-                val userId = json[USER_ID_KEY] as? String ?: ""
-                val workoutCategory = json[WORKOUT_CATEGORY_KEY] as? String ?: ""
-                val location = json[LOCATION_KEY] as? String ?: ""
 
-                val post = Post(id,title,description,imageUrl,userId,workoutCategory,location)
+        }
+    fun fromJSON(json: Map<String, Any>) {
+        id = json[ID_KEY] as? String ?: ""
+        title = json[TITLE_KEY] as? String ?: ""
+        description = json[DESCRIPTION_KEY] as? String ?: ""
+        imageUrl = json[IMAGE_URL_KEY] as? String ?: ""
+        userId = json[USER_ID_KEY] as? String ?: ""
+        workoutCategory = json[WORKOUT_CATEGORY_KEY] as? String ?: ""
+        location = json[LOCATION_KEY] as? String ?: ""
 
-                val timestamp: Long? = json[LAST_UPDATED] as? Long
-                timestamp?.let {
-                    post.lastUpdated = it
-                }
+//        val post = Post(id,title,description,imageUrl,userId,workoutCategory,location)
 
-                return post
-            }
+        val timestamp: Long? = json[LAST_UPDATED] as? Long
+        timestamp?.let {
+            lastUpdated = it
+        }
+    }
+    val json: Map<String, Any>
+        get() {
+            return hashMapOf(
+                ID_KEY to id,
+                TITLE_KEY to title,
+                DESCRIPTION_KEY to description,
+                IMAGE_URL_KEY to imageUrl,
+                USER_ID_KEY to userId,
+                WORKOUT_CATEGORY_KEY to workoutCategory,
+                LOCATION_KEY to location,
+                LAST_UPDATED to FieldValue.serverTimestamp()
+            )
         }
 
 
