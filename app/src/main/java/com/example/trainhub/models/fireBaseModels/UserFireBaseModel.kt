@@ -1,6 +1,7 @@
 package com.example.trainhub.models.fireBaseModels
 
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import com.example.trainhub.models.entities.User
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ class UserFireBaseModel: FirebaseModel() {
             Firebase.auth
         }
         const val USERS_COLLECTION_PATH = "users"
+        const val PROFILE_IMAGES_PATH = "gs://workoutapp-c040a.appspot.com/profile_images"
     }
 
     fun register(email: String, password: String, callback: (String?) -> Unit) {
@@ -97,6 +99,18 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
+    override fun uploadImageToFireStorage(uri: Uri) {
+        val storageReference = storage.getReferenceFromUrl(PROFILE_IMAGES_PATH)
+        val fileReference = storageReference.child("${auth.currentUser?.uid}.jpg")
+
+        fileReference.putFile(uri)
+            .addOnSuccessListener {
+                Log.i(TAG, "uploadImageToFireStorage:success")
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "uploadImageToFireStorage:failure", exception)
+            }
+    }
 
 
 }

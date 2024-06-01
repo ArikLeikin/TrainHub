@@ -1,13 +1,17 @@
 package com.example.trainhub.models.fireBaseModels
 
+import android.net.Uri
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.net.URI
 
-open class FirebaseModel {
+abstract class FirebaseModel {
 
     protected val db = Firebase.firestore
+    protected val storage = Firebase.storage
 
     init {
         val settings = firestoreSettings {
@@ -15,5 +19,7 @@ open class FirebaseModel {
         }
         db.firestoreSettings = settings
     }
+
+    abstract fun uploadImageToFireStorage(uri: Uri)
 
 }
