@@ -2,6 +2,7 @@ package com.example.trainhub.models.fireBaseModels
 
 import android.content.ContentValues.TAG
 import android.location.Geocoder
+import android.net.Uri
 import android.util.Log
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
@@ -97,6 +98,13 @@ class PostFireBaseModel: FirebaseModel(){
                 // Handle the case where the task was not successful
                 callback(listOf())
             }
+        }
+    }
+
+    fun uploadImageToFireStorage(uri: Uri, callback: (Boolean) -> Unit) {
+        val imageFolder = "posts_images"
+        super.uploadImageToFireStorage(uri, imageFolder) { success ->
+            callback(success)
         }
     }
 
