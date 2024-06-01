@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FieldValue
 data class User(@PrimaryKey var id:String,
                 var email: String,
                 var profileImageUrl: String,
-//                var posts:List<String>?=null, //posts id's
+                var name: String,
                 var lastUpdated: Long?=null){
     companion object {
 
@@ -33,14 +33,16 @@ data class User(@PrimaryKey var id:String,
         const val EMAIL_KEY = "email"
         const val PROFILE_IMAGE_URL_KEY = "profileImageUrl"
         const val LAST_UPDATED = "lastUpdated"
+        const val NAME_KEY = "name"
         const val GET_LAST_UPDATED = "get_last_updated"
 
         fun fromJSON(json: Map<String, Any>): User {
             val id = json[ID_KEY] as? String ?: ""
             val email = json[EMAIL_KEY] as? String ?: ""
             val profileImageUrl = json[PROFILE_IMAGE_URL_KEY] as? String ?: ""
+            val name = json[NAME_KEY] as? String ?: ""
 
-            val user = User(id,email,profileImageUrl)
+            val user = User(id,email,profileImageUrl,name)
 
             val timestamp: Timestamp? = json[LAST_UPDATED] as? Timestamp
             timestamp?.let {
@@ -57,6 +59,7 @@ data class User(@PrimaryKey var id:String,
                 ID_KEY to id,
                 EMAIL_KEY to email,
                 PROFILE_IMAGE_URL_KEY to profileImageUrl,
+                NAME_KEY to name,
                 LAST_UPDATED to FieldValue.serverTimestamp()
             )
         }
