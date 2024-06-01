@@ -2,6 +2,7 @@ package com.example.trainhub.models
 
 import android.util.Log
 import android.content.ContentValues.TAG
+import android.net.Uri
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.dao.AppLocalDatabase
 import com.example.trainhub.models.entities.User
@@ -20,9 +21,17 @@ class UserModel private constructor() {
             if(uid!=null){
                 // "" ->
                 user.id = uid
+
                 userFireBaseModel.addUserDocument(user){ isAddedToFireStore->
                     if(isAddedToFireStore){
-                        callback(true)
+                        userFireBaseModel.uploadImageToFireStorage(Uri.parse(user.profileImageUrl)) { isUploaded ->
+                            if (isUploaded) {
+                                Log.i(TAG, "User Document added Image to Firestore")
+                            } else {
+                                Log.e(TAG, "User Document Image not added to Firestore!!!")
+                            }
+                            callback(true)
+                        }
                     }else{
                         Log.e(TAG, "User Document not added to Firestore!!!")
                         userFireBaseModel.deleteUserAuth(){success->
@@ -37,6 +46,7 @@ class UserModel private constructor() {
                 }
             }
             else{
+                Log.i(TAG, "User Auth not created in Firebase")
                 callback(false)
             }
         }

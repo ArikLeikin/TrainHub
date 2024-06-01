@@ -17,12 +17,6 @@ class PostFireBaseModel: FirebaseModel(){
         db.collection(POSTS_COLLECTION_PATH).document(post.id).set(post.json)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val location = TrainHubApplication.Globals.appContext?.let {context->
-                        Geocoder(context).getFromLocationName(post.location,1){
-                            it[0].latitude
-                            it[0].longitude
-                        }
-                    }
 //                    val location = TrainHubApplication.Globals.appContext?.let {context->
 //                        Geocoder(context).getFromLocationName(post.location,1){
 //                            it[0].latitude
