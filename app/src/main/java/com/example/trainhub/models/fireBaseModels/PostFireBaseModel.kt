@@ -95,6 +95,21 @@ class PostFireBaseModel: FirebaseModel(){
         }
     }
 
+    fun getPostDocument(postId: String, callback: (Post?) -> Unit) {
+        db.collection(POSTS_COLLECTION_PATH).document(postId).get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result.data
+                    val post = Post(postId, "", "", "", "", "", "")
+                    post.fromJSON(document!!)
+                    callback(post)
+                } else {
+                    Log.e(TAG, "Error getting post document: ${task.exception}")
+                    callback(null)
+                }
+            }
+    }
+
     fun uploadImageToFireStorage(uri: Uri, callback: (Boolean) -> Unit) {
         val imageFolder = "posts_images"
         super.uploadImageToFireStorage(uri, imageFolder) { success ->
