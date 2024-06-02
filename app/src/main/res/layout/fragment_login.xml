@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,96 +9,112 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background" />
+        android:foregroundTint="#FF5722">
 
-    <ImageView
-        android:id="@+id/image_1"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@drawable/logo"
-        android:contentDescription="logo" />
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/logo"
+            android:contentDescription="logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/aa2e875e_c4"
-        android:layout_width="match_parent"
-        android:layout_height="221dp"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/background" />
+        <ImageView
+            android:id="@+id/aa2e875e_c4"
+            android:layout_width="match_parent"
+            android:layout_height="221dp"
+            android:background="@drawable/background"
+            app:layout_constraintTop_toBottomOf="@+id/image_1" />
 
-    <EditText
-        android:id="@+id/etLoginEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="400dp"
-        android:hint="@string/email"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/colorHintText"
-        android:inputType="textEmailAddress"
-        android:textSize="23sp"
-        android:autofillHints="" />
+        <EditText
+            android:id="@+id/etSignInEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:autofillHints=""
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/colorHintText"
+            android:textSize="23sp"
+            app:layout_constraintTop_toBottomOf="@+id/aa2e875e_c4" />
 
-    <EditText
-        android:id="@+id/etLoginPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="450dp"
-        android:hint="@string/password"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/colorHintText"
-        android:inputType="textPassword"
-        android:textSize="23sp"
-        android:autofillHints="" />
+        <EditText
+            android:id="@+id/etSignInPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:autofillHints=""
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/colorHintText"
+            android:textSize="23sp"
+            app:layout_constraintTop_toBottomOf="@+id/etSignInEmail" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="560dp"
-        android:backgroundTint="@color/black"
-        android:text="@string/login"
-        android:textColor="@color/white"
-        android:textSize="23sp" />
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="64dp"
+            android:backgroundTint="@color/black"
+            android:text="Sign In"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etSignInPassword" />
 
-    <TextView
-        android:id="@+id/tvDontHaveAccount"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="625dp"
-        android:text="@string/don_t_have_an_account_sign_up"
-        android:textColor="@color/white"
-        android:textSize="23sp" />
+        <TextView
+            android:id="@+id/tvDontHaveAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="41dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="72dp"
+            android:text="@string/don_t_have_an_account_sign_up"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
 
-    <TextView
-        android:id="@+id/tvLoginSignUp"
-        android:layout_width="85dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="295dp"
-        android:layout_marginTop="625dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="48dp"
-        android:onClick="signUp"
-        android:text="@string/signup"
-        android:textColor="@color/blue"
-        android:textSize="23sp" />
+        <TextView
+            android:id="@+id/tvSignUp"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="48dp"
+            android:onClick="signUp"
+            android:text="@string/signup"
+            android:textColor="@color/phOrange"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/tvDontHaveAccount"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
 
-    <TextView
-        android:id="@+id/tvLoginError"
-        android:layout_width="311dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="502dp"
-        android:minHeight="48dp"
-        android:text=""
-        android:textColor="@color/red"
-        android:textSize="23sp" />
+        <ProgressBar
+            android:id="@+id/pbSignIn"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/phOrange"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>

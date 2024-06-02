@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Back to Login"
-            android:textColor="#65B6F6"
+            android:textColor="@color/phOrange"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
