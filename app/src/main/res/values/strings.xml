@@ -13,4 +13,5 @@
     <string name="don_t_have_an_account_sign_up">Don\'t have an account?</string>
     <string name="login">Login</string>
     <string name="signup">Sign Up</string>
+    <string name="location">location</string>
 </resources>
