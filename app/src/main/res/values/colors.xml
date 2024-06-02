@@ -7,4 +7,8 @@
     <color name="colorPrimary">#FF5722</color>
     <color name="colorHintText">#cccccc</color>
     <color name="blue">#65B6F6</color>
+    <color name="phOrange">#ffa31a</color>
+    <color name="phGray">#808080</color>
+    <color name="phDarkGray">#292929</color>
+    <color name="phBlack">#1b1b1b</color>
 </resources>
