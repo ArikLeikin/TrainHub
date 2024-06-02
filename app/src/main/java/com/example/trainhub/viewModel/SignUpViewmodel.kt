@@ -10,13 +10,9 @@ import com.example.trainhub.models.UserModel
 import com.example.trainhub.models.entities.User
 
 class SignUpViewmodel: ViewModel() {
-    private var um: UserModel? = null
+    private var um: UserModel? = UserModel.instance
     private val _registrationStatus = MutableLiveData<Boolean>()
     val registrationStatus: LiveData<Boolean> get() = _registrationStatus
-
-    init {
-        um = UserModel.instance
-    }
 
     fun register(user: User, password: String) {
         Log.i(TAG, "viewModel register clicked")
