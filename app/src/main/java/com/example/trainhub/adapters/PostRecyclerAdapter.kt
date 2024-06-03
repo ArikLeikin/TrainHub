@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.trainhub.R
 import com.example.trainhub.models.entities.Post
 
-class PostRecyclerAdapter(private val posts: List<Post>) :
+class PostRecyclerAdapter(var posts: List<Post>) :
     RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
