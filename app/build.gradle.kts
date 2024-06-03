@@ -13,6 +13,7 @@ android {
     namespace = "com.example.trainhub"
     compileSdk = 34
     buildFeatures {
+        dataBinding = true
         buildConfig = true
     }
 
