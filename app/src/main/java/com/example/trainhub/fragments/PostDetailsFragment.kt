@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,11 +16,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.utils.widget.ImageFilterView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.trainhub.R
-import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
+import com.example.trainhub.models.entities.User
 import com.example.trainhub.viewModel.PostDetailsViewModel
 import com.google.android.material.button.MaterialButton
 
@@ -29,21 +30,20 @@ import com.google.android.material.button.MaterialButton
 class PostDetailsFragment : Fragment() {
 
     private var postImage:ImageView? = null
+    private var profileImage:ImageFilterView? = null
     private var postTitle:EditText? = null
     private var postDescription:EditText? = null
     private var postUserName:TextView? = null
     private var editBtn:MaterialButton? = null
     private var deleteBtn:MaterialButton? = null
     private var post: Post? = null
+    private var user : User? = null
     private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private var selectedImageUri: Uri? = null
     private var filePath: String? = null
     private var imageChanged = false
 
-    private val postDetailsViewModel = PostDetailsViewModel()
-
-
-
+    private lateinit var postDetailsViewModel : PostDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,46 +62,63 @@ class PostDetailsFragment : Fragment() {
         postUserName = view.findViewById(R.id.tvPostDetailsName)
         editBtn = view.findViewById(R.id.mbPostDetailsEdit)
         deleteBtn = view.findViewById(R.id.mbPostDetailsDelete)
+        profileImage = view.findViewById(R.id.ifvPostDetailsProfileImg)
 
-        val user = TrainHubApplication.Globals.currentUser
-        arguments?.getString("postId")?.let {
-            postDetailsViewModel.postModel.getPostById(it){currentPost->
-                this.post = currentPost
-                this.post!!.id = it
+        postDetailsViewModel = ViewModelProvider(this)[PostDetailsViewModel::class.java]
 
-                postTitle!!.setText(currentPost?.title)
-                postDescription!!.setText(currentPost?.description)
-                postUserName!!.text= user!!.name
+        postDetailsViewModel.post.observe(viewLifecycleOwner){
+            post = it
+            postTitle!!.setText(post?.title)
+            postDescription!!.setText(post?.description)
 
-                Glide.with(this)
-                    .load(Uri.parse(currentPost?.imageUrl))
-                    .into(postImage!!)
+            Glide.with(requireContext())
+                .load(Uri.parse(post?.imageUrl))
+                .into(postImage!!)
 
-                //If post not belong to user hide edit and delete buttons
-                if(!this.post?.userId.equals(user.id)){
-                    editBtn?.visibility = View.GONE
-                    deleteBtn?.visibility = View.GONE
-                    postTitle?.isEnabled = false
-                    postDescription?.isEnabled = false
-                }else{
-                    postImage!!.setOnClickListener {
-                        openImagePicker()
-                    }
-                    selectedImageUri = Uri.parse(currentPost!!.imageUrl)
+        }
+        postDetailsViewModel.user.observe(viewLifecycleOwner){
+            user = it
+            Glide.with(requireContext())
+                .load(Uri.parse(user?.profileImageUrl))
+                .into(profileImage!!)
+            postUserName!!.text = user?.name
+            if(!this.post?.userId.equals(user?.id)){
+                editBtn?.visibility = View.GONE
+                deleteBtn?.visibility = View.GONE
+                postTitle?.isEnabled = false
+                postDescription?.isEnabled = false
+            }else{
+                postImage!!.setOnClickListener {
+                    openImagePicker()
                 }
+                selectedImageUri = Uri.parse(post?.imageUrl)
             }
         }
 
-        deleteBtn?.setOnClickListener(){
-            postDetailsViewModel.postModel.deletePost(post!!){isDeleted->
-                if(isDeleted){
-                    findNavController().navigateUp()
-                }
+        arguments?.getString("postId")?.let {postId->
+            postDetailsViewModel.fetchPost(postId)
+
+        }
+
+        deleteBtn?.setOnClickListener{
+            postDetailsViewModel.deletePost(post!!)
+        }
+
+        postDetailsViewModel.saveStatus.observe(viewLifecycleOwner){
+            if(it){
+                Toast.makeText(context, "Post saved changes!", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context, "Post not saved!", Toast.LENGTH_SHORT).show()
             }
         }
 
-
-
+        postDetailsViewModel.deleteStatus.observe(viewLifecycleOwner){
+            if(it){
+                findNavController().navigateUp()
+            }else{
+                Toast.makeText(context, "Error! Post not deleted!", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){loadedProfileImageInPickerHandler(it)}
 
@@ -110,15 +127,7 @@ class PostDetailsFragment : Fragment() {
             post!!.title = postTitle?.text.toString()
             post!!.description = postDescription?.text.toString()
             post!!.imageUrl = selectedImageUri.toString()
-            postDetailsViewModel.postModel.updatePost(post!!,imageChanged){isUpdated->
-                if(isUpdated){
-                    //TODO navigate to home fragment
-                    Toast.makeText(context, "Post saved changes!", Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(context, "Post not saved!", Toast.LENGTH_SHORT).show()
-                }
-            }
-
+            postDetailsViewModel.updatePost(post!!,imageChanged)
         }
     }
 
