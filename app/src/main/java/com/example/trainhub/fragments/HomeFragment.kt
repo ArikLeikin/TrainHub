@@ -9,32 +9,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainhub.R
 import com.example.trainhub.adapters.PostRecyclerAdapter
+import com.example.trainhub.databinding.FragmentHomeBinding
 import com.example.trainhub.models.entities.Post
+import com.example.trainhub.viewModel.HomeViewModel
+
 
 class HomeFragment : Fragment() {
 
-    private lateinit var postsRecyclerView: RecyclerView
-    private lateinit var postAdapter: PostRecyclerAdapter
+    var postsRecyclerView: RecyclerView?=null
+    var postAdapter: PostRecyclerAdapter?=null
+    private var homeViewModel = HomeViewModel()
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        postsRecyclerView = view.findViewById(R.id.rvPostsList)
-        postsRecyclerView.layoutManager = LinearLayoutManager(context)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+        postsRecyclerView = binding.rvPostsList
+        postsRecyclerView?.setHasFixedSize(true)
+        homeViewModel.fetchPosts()
+        homeViewModel.posts.observe(viewLifecycleOwner) {
+            postAdapter?.posts= it
+            postAdapter?.notifyDataSetChanged()
+        }
+        postsRecyclerView?.layoutManager = LinearLayoutManager(context)
+        postAdapter = PostRecyclerAdapter(listOf())
 
-        // Initialize your post list and adapter here
-        val postsList = listOf(
-            Post("Post 1", "Title 1", "Description let fill it with random words and see how it looks 1","android.resource://${requireActivity().packageName}/${R.drawable.background}","","",""),
-            Post("Post 2", "Title 2", "Description let fill it with random words and see how it looks 2","android.resource://${requireActivity().packageName}/${R.drawable.background}","","","")
-            // Add more posts as needed
-        )
-
-        postAdapter = PostRecyclerAdapter(postsList)
-        postsRecyclerView.adapter = postAdapter
+        postsRecyclerView?.adapter = postAdapter
 
         return view
     }
