@@ -23,19 +23,23 @@ abstract class FirebaseModel {
     }
 
     fun uploadImageToFireStorage(uri: Uri, imageFolder: String, callback: (String?)->Unit){
-        val storageReference = storage.getReferenceFromUrl(STORAGE_PATH+imageFolder)
-        val fileName = "${System.currentTimeMillis()}.jpg"
-        val fileReference = storageReference.child(fileName)
+        val storageReference = storage
+            .getReference(imageFolder+"/"+System.currentTimeMillis()+".jpg")
+        storageReference.putFile(uri)
+            .addOnSuccessListener {result->
+                storageReference.downloadUrl.addOnSuccessListener { uriToStore->
+                    Log.i(ContentValues.TAG, "uploadImageToFireStorage:success")
+                    callback(uriToStore.toString())
+                }.addOnFailureListener(){
+                    Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", it)
+                    callback(null)
+                }
+            .addOnFailureListener(){
+                    Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", it)
+                    callback(null)
+                }
 
-        fileReference.putFile(uri)
-            .addOnSuccessListener {
-                Log.i(ContentValues.TAG, "uploadImageToFireStorage:success")
-                callback(fileName)
-            }
-            .addOnFailureListener { exception ->
-                Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", exception)
-                callback(null)
-            }
+        }
     }
 
 }
