@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:background="@null"
-                    android:text="Post Title"
+                    android:text=""
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textSize="30sp"
                     app:autoSizeMaxTextSize="100sp"
@@ -102,7 +102,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
                     android:background="@null"
-                    android:text="Post User"
+                    android:text=""
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@+id/ifvPostDetailsProfileImg"
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="11dp"
-                    android:text="Description"
+                    android:text=""
                     android:background="@null"
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="12sp"
@@ -139,17 +139,19 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
-                <androidx.constraintlayout.utils.widget.ImageFilterView
+                <ImageView
                     android:id="@+id/ifvPostDetailsProfileImg"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+
+                    android:contentDescription="@string/background_app"
+                    android:adjustViewBounds="true"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:roundPercent="1"
-                    tools:src="@tools:sample/avatars"
-                    android:src="@drawable/user_profile"/>
+                    app:srcCompat="@drawable/user_profile"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

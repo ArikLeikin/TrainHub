@@ -110,10 +110,10 @@ class PostFireBaseModel: FirebaseModel(){
             }
     }
 
-    fun uploadImageToFireStorage(uri: Uri, callback: (Boolean) -> Unit) {
+    fun uploadImageToFireStorage(uri: Uri, callback: (String?) -> Unit) {
         val imageFolder = "posts_images"
-        super.uploadImageToFireStorage(uri, imageFolder) { success ->
-            callback(success)
+        super.uploadImageToFireStorage(uri, imageFolder) { imageName ->
+            callback(imageName)
         }
     }
 
