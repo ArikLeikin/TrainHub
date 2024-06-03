@@ -90,4 +90,16 @@ class UserModel private constructor() {
             roomDatabase.userDao().deleteUser(user)
         }
     }
+
+    fun getUserById(id: String, callback: (User?) -> Unit){
+        userFireBaseModel.getUserByID(id){user->
+            if (user != null){
+                Log.i(TAG, "getUserById successful ID: $id")
+                callback(user)
+            }else{
+                Log.e(TAG, "getUserById failed ID: $id")
+                callback(null)
+            }
+        }
+    }
 }
