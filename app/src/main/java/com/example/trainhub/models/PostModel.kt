@@ -97,5 +97,20 @@ class PostModel private constructor() {
         }
     }
 
+    fun getPostById(postId: String, callback: (Post?) -> Unit){
+        postFireBaseModel.getPostDocument(postId){ post->
+            if(post!=null){
+                //TODO: check if post is already in room database and if post is user's post
+
+//                TrainHubApplication.Globals.executorService.execute{
+//                    roomDatabase.postDao().insert(post)
+//                }
+                callback(post)
+            }else{
+                callback(null)
+            }
+        }
+    }
+
 
 }

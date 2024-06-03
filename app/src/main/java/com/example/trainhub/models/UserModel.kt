@@ -60,6 +60,7 @@ class UserModel private constructor() {
                         TrainHubApplication.Globals.executorService.execute {
                             roomDatabase.userDao().insert(user)
                         }
+                        TrainHubApplication.Globals.currentUser = user
                         callback(true)
                     }
                     else{
@@ -86,6 +87,7 @@ class UserModel private constructor() {
     }
 
     fun logout(user:User){
+        TrainHubApplication.Globals.currentUser = null
         TrainHubApplication.Globals.executorService.execute {
             roomDatabase.userDao().deleteUser(user)
         }

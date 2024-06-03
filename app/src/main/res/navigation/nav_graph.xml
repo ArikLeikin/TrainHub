@@ -117,4 +117,9 @@
             app:destination="@id/homeFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.example.trainhub.fragments.PostDetailsFragment"
+        android:label="fragment_post_details"
+        tools:layout="@layout/fragment_post_details" />
 </navigation>
