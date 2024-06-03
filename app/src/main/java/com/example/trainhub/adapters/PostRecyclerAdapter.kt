@@ -35,8 +35,6 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
         holder.titleTextView.text = currentItem.post.title
         holder.descriptionTextView.text = currentItem.post.description
 
-
-
         Glide.with(holder.itemView.context)
             .load(currentItem.post.imageUrl)
             .into(holder.postImg)
