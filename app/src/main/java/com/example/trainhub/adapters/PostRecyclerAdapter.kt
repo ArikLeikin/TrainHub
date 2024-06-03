@@ -43,7 +43,7 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
 
         Glide.with(holder.itemView.context)
             .load(currentItem.user?.profileImageUrl)
-            .into(holder.postImg)
+            .into(holder.profileImg)
         Log.d(TAG,"PROFILE IMAGE: profile_images/${currentItem.user?.profileImageUrl}")
     }
 
