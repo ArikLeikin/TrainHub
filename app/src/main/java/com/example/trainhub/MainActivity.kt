@@ -3,9 +3,15 @@ package com.example.trainhub
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
+import com.example.trainhub.fragments.AddPostFragment
+import com.example.trainhub.fragments.DiscoverFragment
+import com.example.trainhub.fragments.HomeFragment
+import com.example.trainhub.fragments.LocationFragment
+import com.example.trainhub.fragments.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -20,6 +26,24 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView?.let {
             Navigation.setViewNavController(it, navController)
         }
+
+
+        val homeFragment = HomeFragment()
+        val discoverFragment = DiscoverFragment()
+        val addPostFragment = AddPostFragment()
+        val locationFragment = LocationFragment()
+        val profileFragment = ProfileFragment()
+        bottomNavigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.icHome -> replaceFragment(homeFragment)
+                R.id.icDiscover -> replaceFragment(discoverFragment)
+                R.id.icAddPost -> replaceFragment(addPostFragment)
+                R.id.icLocation -> replaceFragment(locationFragment)
+                R.id.icProfile -> replaceFragment(profileFragment)
+            }
+            true
+        }
+
         navController = navHostFragment?.navController
         navController?.addOnDestinationChangedListener { _, destination, _  ->
             when (destination.id) {
@@ -28,9 +52,14 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
 
-
-
+    private fun replaceFragment(fragment: Fragment){
+        if(fragment!=null){
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.navHostMain,fragment)
+            transaction.commit()
+        }
     }
 
 
