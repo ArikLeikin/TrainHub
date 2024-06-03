@@ -9,10 +9,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import org.json.JSONException
 import org.json.JSONObject
 import java.sql.Date
-import java.sql.Timestamp
 
 class UserFireBaseModel: FirebaseModel() {
 
@@ -64,13 +62,13 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
-    fun getUserByID(id: String, callback: (User?) -> Unit){
-        db.collection(USERS_COLLECTION_PATH).whereEqualTo("id", id).get().addOnCompleteListener{task ->
+    fun getUserByID(id: String, callback: (User?) -> Unit) {
+        db.collection(USERS_COLLECTION_PATH).whereEqualTo("id", id).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val result: QuerySnapshot? = task.result
-                val documentSnapshot = result?.documents?.get(0)
+                if (result != null && !result.isEmpty) {
+                    val documentSnapshot = result.documents[0]
 
-                if (documentSnapshot != null) {
                     val jsonData: Map<String, Any>? = documentSnapshot.data
                     val jsonString = Gson().toJson(jsonData)
                     if (jsonData != null) {
@@ -166,10 +164,10 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
-    fun uploadImageToFireStorage(uri: Uri, callback: (Boolean) -> Unit) {
+    fun uploadImageToFireStorage(uri: Uri, callback: (String?) -> Unit) {
         val imageFolder = "profile_images"
-        super.uploadImageToFireStorage(uri, imageFolder) { success ->
-            callback(success)
+        super.uploadImageToFireStorage(uri, imageFolder) {
+            callback(it)
         }
     }
 
