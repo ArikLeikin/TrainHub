@@ -64,6 +64,35 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
+    fun getUserByID(id: String, callback: (User?) -> Unit){
+        db.collection(USERS_COLLECTION_PATH).whereEqualTo("id", id).get().addOnCompleteListener{task ->
+            if (task.isSuccessful) {
+                val result: QuerySnapshot? = task.result
+                val documentSnapshot = result?.documents?.get(0)
+
+                if (documentSnapshot != null) {
+                    val jsonData: Map<String, Any>? = documentSnapshot.data
+                    val jsonString = Gson().toJson(jsonData)
+                    if (jsonData != null) {
+                        Log.i(TAG, "JSON representation of the document: $jsonString")
+
+                        val user = parseUserFromJson(jsonString)
+                        callback(user)
+                    } else {
+                        Log.e(TAG, "Document data is null")
+                        callback(null)
+                    }
+                } else {
+                    Log.e(TAG, "No document found with ID: $id")
+                    callback(null)
+                }
+            } else {
+                Log.e(TAG, "getUser:failure", task.exception)
+                callback(null)
+            }
+        }
+    }
+
     fun getUser(email: String, callback: (User?) -> Unit) {
         db.collection(USERS_COLLECTION_PATH)
             .whereEqualTo("email", email)
