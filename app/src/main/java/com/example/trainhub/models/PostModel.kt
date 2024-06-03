@@ -21,8 +21,9 @@ class PostModel private constructor() {
         postFireBaseModel.uploadImageToFireStorage(Uri.parse(post.imageUrl)){imageName->
             if(imageName!=null){
                 post.imageUrl = imageName
-                postFireBaseModel.addPostDocument(post){ isAddedToFireStore->
-                    if(isAddedToFireStore){
+                postFireBaseModel.addPostDocument(post){ uniqueId->
+                    if(uniqueId!=null){
+                        post.id = uniqueId
                         TrainHubApplication.Globals.executorService.execute{
                             roomDatabase.postDao().insert(post)
                         }
