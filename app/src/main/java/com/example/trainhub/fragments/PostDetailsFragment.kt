@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.example.trainhub.R
+import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
 import com.example.trainhub.models.entities.User
 import com.example.trainhub.viewModel.PostDetailsViewModel
@@ -59,6 +60,7 @@ class PostDetailsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_post_details, container, false)
+
         setUpUI(view)
         return view
     }
@@ -79,38 +81,27 @@ class PostDetailsFragment : Fragment() {
             post = it
             postTitle!!.setText(post?.title)
             postDescription!!.setText(post?.description)
-//            val uri = Uri.parse(post?.imageUrl)
+
             Glide.with(requireContext())
                 .load(post?.imageUrl)
                 .into(postImage!!)
-
-//            val theImage = GlideUrl(
-//                post?.imageUrl, LazyHeaders.Builder()
-//                    .addHeader("User-Agent", "5")
-//                    .build()
-//            )
 
 
         }
         postDetailsViewModel.user.observe(viewLifecycleOwner){
             user = it
-            println(user!!.profileImageUrl)
-//            Firebase.storage.reference.child("profile_images/${user!!.profileImageUrl}").downloadUrl.addOnSuccessListener { uri ->
-//                println(uri)
-//            }
 
             Glide.with(requireContext())
                 .load(user!!.profileImageUrl)
                 .into(profileImage!!)
 
-
             postUserName!!.text = user?.name
-            if(!this.post?.userId.equals(user?.id)){
-                editBtn?.visibility = View.GONE
-                deleteBtn?.visibility = View.GONE
-                postTitle?.isEnabled = false
-                postDescription?.isEnabled = false
-            }else{
+            if(TrainHubApplication.Globals.currentUser!!.id == user?.id){
+                //If the post belongs to the current user
+                editBtn?.visibility = View.VISIBLE
+                deleteBtn?.visibility = View.VISIBLE
+                postTitle?.isEnabled = true
+                postDescription?.isEnabled = true
                 postImage!!.setOnClickListener {
                     openImagePicker()
                 }
