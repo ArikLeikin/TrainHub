@@ -15,12 +15,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
+import com.example.trainhub.MainActivity
 import com.example.trainhub.R
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
@@ -36,11 +38,13 @@ class AddPostFragment : Fragment() {
     var postLocation:String? = null
     var postImageUrl:String? = null
     var addPostButton: Button? = null
+    var pb: ProgressBar? = null
     private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private var selectedImageUri: Uri? = null
     private var filePath: String? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val AddPostViewModel = AddPostViewModel()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,7 +61,7 @@ class AddPostFragment : Fragment() {
         postTitle = view.findViewById(R.id.etAddPostTitle)
         description = view.findViewById(R.id.etAddPostDescription)
         addPostButton = view.findViewById(R.id.btnAddPost)
-
+        pb = view.findViewById(R.id.pbAddPost)
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){loadedProfileImageInPickerHandler(it)}
 
         postImage?.setOnClickListener {
@@ -65,6 +69,7 @@ class AddPostFragment : Fragment() {
         }
 
         addPostButton?.setOnClickListener{
+            pb?.visibility = View.VISIBLE
             getLocation(){locationIsSet->
                 if(locationIsSet){
                     //add post
@@ -75,7 +80,10 @@ class AddPostFragment : Fragment() {
                     post.imageUrl = selectedImageUri.toString()
                     AddPostViewModel.addPost(post){
                         if(it){
+                            pb?.visibility = View.GONE
                             Toast.makeText(context, "Post added successfully", Toast.LENGTH_SHORT).show()
+                            val activity = context as MainActivity
+                            activity.moveToHome()
                         }else{
                             Toast.makeText(context, "Failed to add post", Toast.LENGTH_SHORT).show()
                         }
@@ -128,7 +136,7 @@ class AddPostFragment : Fragment() {
                         val longitude = location.longitude
                         postLocation = "$latitude,$longitude"
                         // Use the latitude and longitude as needed
-                        Toast.makeText(context, "Latitude: $latitude, Longitude: $longitude", Toast.LENGTH_LONG).show()
+//                        Toast.makeText(context, "Latitude: $latitude, Longitude: $longitude", Toast.LENGTH_LONG).show()
                         callback(true)
                     } else {
                         Toast.makeText(context, "Unable to get location", Toast.LENGTH_SHORT).show()
