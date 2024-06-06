@@ -25,7 +25,7 @@ class HomeFragment : Fragment() , SwipeRefreshLayout.OnRefreshListener{
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
         postsRecyclerView = binding.rvPostsList

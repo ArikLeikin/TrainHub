@@ -1,6 +1,7 @@
 package com.example.trainhub
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -18,27 +19,28 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
     private var navController: NavController? = null
     private val homeFragment = HomeFragment()
+    private val discoverFragment = DiscoverFragment()
+    private val locationFragment = LocationFragment()
+    private val profileFragment = ProfileFragment()
+    private val addPostFragment = AddPostFragment()
     private var bottomNavigationView:BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navHostFragment: NavHostFragment? = supportFragmentManager.findFragmentById(R.id.navHostMain) as? NavHostFragment
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView?.let {
             Navigation.setViewNavController(it, navController)
         }
 
 
-        val discoverFragment = DiscoverFragment()
-        val locationFragment = LocationFragment()
-        val profileFragment = ProfileFragment()
 
         bottomNavigationView?.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.icHome -> replaceFragment(homeFragment)
                 R.id.icDiscover -> replaceFragment(discoverFragment)
-                R.id.icAddPost -> replaceFragment(AddPostFragment())
+                R.id.icAddPost -> replaceFragment(addPostFragment)
                 R.id.icLocation -> replaceFragment(locationFragment)
                 R.id.icProfile -> replaceFragment(profileFragment)
             }
@@ -55,29 +57,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        bottomNavigationView.setOnItemSelectedListener { item ->
+       bottomNavigationView?.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.HomeFragment -> {
-                    navController?.navigate(R.id.HomeFragment)
+
+                R.id.icHome -> {
+
+                    navController?.navigate(R.id.homeFragment)
                     true
                 }
-                R.id.DiscoverFragment -> {
+                R.id.icDiscover -> {
+
                     navController?.navigate(R.id.discoverFragment)
                     true
                 }
-                R.id.addPostFragment -> {
-                    navController?.navigate(R.id.AddPostFragment)
+                R.id.icAddPost -> {
+                    navController?.navigate(R.id.addPostFragment)
                     true
                 }
-                R.id.LocationFragment -> {
-                    navController?.navigate(R.id.LocationFragment)
+                R.id.icLocation -> {
+                    navController?.navigate(R.id.locationFragment)
                     true
                 }
-                R.id.ProfileFragment -> {
-                    navController?.navigate(R.id.ProfileFragment)
+                R.id.icProfile -> {
+                    navController?.navigate(R.id.profileFragment)
                     true
                 }
                 else -> false
+
             }
         }
 
