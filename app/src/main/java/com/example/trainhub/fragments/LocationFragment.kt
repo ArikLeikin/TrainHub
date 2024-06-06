@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
-import com.example.trainhub.BuildConfig.GOOGLE_API_KEY
 import com.example.trainhub.R
 import com.example.trainhub.models.PostModel
 import com.example.trainhub.models.entities.Post
@@ -19,8 +18,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
-
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -43,9 +40,6 @@ class LocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     private lateinit var locationCallback: LocationCallback
 
     private val postModel = PostModel.instance
-    companion object {
-        var mapFragment : SupportMapFragment?=null
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,14 +61,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     override fun onMapReady(map: GoogleMap) {
         Log.d("LocationFragment", "onMapReady called")
         googleMap = map
-        val location = LatLng(24.31531687428042, 40.89473901667967)
 
-        val marker = googleMap.addMarker(
-            MarkerOptions()
-                .position(location)
-                .title("Hello World")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-        )
         googleMap.setOnMarkerClickListener(this)
         googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.uiSettings.isCompassEnabled = true
@@ -114,7 +101,23 @@ class LocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        return false
+        val post = marker.tag as Post
+        Log.d("LocationFragment", "Marker clicked: ${post.title}")
+        Log.d("LocationFragment", "Marker clicked: ${post.description}")
+        Log.d("LocationFragment", "Marker clicked: ${post.imageUrl}")
+        //Log.d("LocationFragment", "Marker clicked: ${post.userId}")
+
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        val frag = PostDetailsFragment()
+        println(post.id)
+
+        frag.arguments = Bundle().apply {
+            putString("postId", post.id)
+        }
+
+        transaction?.replace(R.id.navHostMain, frag)
+        transaction?.commit()
+        return true
     }
 
     private fun updateMapWithPosts(posts: List<Post>) {

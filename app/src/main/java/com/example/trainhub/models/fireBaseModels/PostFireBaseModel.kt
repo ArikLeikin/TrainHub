@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.Query
 import java.util.LinkedList
 
@@ -13,7 +14,9 @@ class PostFireBaseModel: FirebaseModel(){
     companion object {
         const val POSTS_COLLECTION_PATH = "posts"
     }
-    fun addPostDocument(post: Post, callback:(Boolean) -> Unit) {
+    fun addPostDocument(post: Post, callback:(String?) -> Unit) {
+        val uniqueID = db.collection(POSTS_COLLECTION_PATH).document().id
+        post.id = uniqueID
         db.collection(POSTS_COLLECTION_PATH).document(post.id).set(post.json)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -23,10 +26,10 @@ class PostFireBaseModel: FirebaseModel(){
 //                            it[0].longitude
 //                        }
 //                    }
-                    callback(true)
+                    callback(uniqueID)
                 } else {
                     Log.e(TAG, "Error adding post document: ${task.exception}")
-                    callback(false)
+                    callback(null)
                 }
             }
     }
@@ -110,10 +113,10 @@ class PostFireBaseModel: FirebaseModel(){
             }
     }
 
-    fun uploadImageToFireStorage(uri: Uri, callback: (Boolean) -> Unit) {
+    fun uploadImageToFireStorage(uri: Uri, callback: (String?) -> Unit) {
         val imageFolder = "posts_images"
-        super.uploadImageToFireStorage(uri, imageFolder) { success ->
-            callback(success)
+        super.uploadImageToFireStorage(uri, imageFolder) { imageName ->
+            callback(imageName)
         }
     }
 

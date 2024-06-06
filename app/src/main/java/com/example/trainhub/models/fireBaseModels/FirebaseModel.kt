@@ -3,13 +3,11 @@ package com.example.trainhub.models.fireBaseModels
 import android.content.ContentValues
 import android.net.Uri
 import android.util.Log
-import androidx.room.RoomDatabase
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import java.net.URI
 
 abstract class FirebaseModel {
 
@@ -24,19 +22,24 @@ abstract class FirebaseModel {
         db.firestoreSettings = settings
     }
 
-    fun uploadImageToFireStorage(uri: Uri, imageFolder: String, callback: (Boolean)->Unit){
-        val storageReference = storage.getReferenceFromUrl(STORAGE_PATH+imageFolder)
-        val fileReference = storageReference.child("${System.currentTimeMillis()}.jpg")
+    fun uploadImageToFireStorage(uri: Uri, imageFolder: String, callback: (String?)->Unit){
+        val storageReference = storage
+            .getReference(imageFolder+"/"+System.currentTimeMillis()+".jpg")
+        storageReference.putFile(uri)
+            .addOnSuccessListener {result->
+                storageReference.downloadUrl.addOnSuccessListener { uriToStore->
+                    Log.i(ContentValues.TAG, "uploadImageToFireStorage:success")
+                    callback(uriToStore.toString())
+                }.addOnFailureListener(){
+                    Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", it)
+                    callback(null)
+                }
+            .addOnFailureListener(){
+                    Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", it)
+                    callback(null)
+                }
 
-        fileReference.putFile(uri)
-            .addOnSuccessListener {
-                Log.i(ContentValues.TAG, "uploadImageToFireStorage:success")
-                callback(true)
-            }
-            .addOnFailureListener { exception ->
-                Log.e(ContentValues.TAG, "uploadImageToFireStorage:failure", exception)
-                callback(false)
-            }
+        }
     }
 
 }

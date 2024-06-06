@@ -1,6 +1,7 @@
 package com.example.trainhub.fragments
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -20,17 +22,23 @@ import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.trainhub.R
+import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.entities.Post
 import com.example.trainhub.models.entities.User
 import com.example.trainhub.viewModel.PostDetailsViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.storage
 
 
 class PostDetailsFragment : Fragment() {
 
     private var postImage:ImageView? = null
-    private var profileImage:ImageFilterView? = null
+    private var profileImage:ImageView? = null
     private var postTitle:EditText? = null
     private var postDescription:EditText? = null
     private var postUserName:TextView? = null
@@ -42,6 +50,7 @@ class PostDetailsFragment : Fragment() {
     private var selectedImageUri: Uri? = null
     private var filePath: String? = null
     private var imageChanged = false
+    private var progressBar: ProgressBar? = null
 
     private lateinit var postDetailsViewModel : PostDetailsViewModel
 
@@ -51,6 +60,7 @@ class PostDetailsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_post_details, container, false)
+
         setUpUI(view)
         return view
     }
@@ -63,6 +73,7 @@ class PostDetailsFragment : Fragment() {
         editBtn = view.findViewById(R.id.mbPostDetailsEdit)
         deleteBtn = view.findViewById(R.id.mbPostDetailsDelete)
         profileImage = view.findViewById(R.id.ifvPostDetailsProfileImg)
+        progressBar = view.findViewById(R.id.pbPostDetails)
 
         postDetailsViewModel = ViewModelProvider(this)[PostDetailsViewModel::class.java]
 
@@ -72,39 +83,46 @@ class PostDetailsFragment : Fragment() {
             postDescription!!.setText(post?.description)
 
             Glide.with(requireContext())
-                .load(Uri.parse(post?.imageUrl))
+                .load(post?.imageUrl)
                 .into(postImage!!)
+
 
         }
         postDetailsViewModel.user.observe(viewLifecycleOwner){
             user = it
+
             Glide.with(requireContext())
-                .load(Uri.parse(user?.profileImageUrl))
+                .load(user!!.profileImageUrl)
                 .into(profileImage!!)
+
             postUserName!!.text = user?.name
-            if(!this.post?.userId.equals(user?.id)){
-                editBtn?.visibility = View.GONE
-                deleteBtn?.visibility = View.GONE
-                postTitle?.isEnabled = false
-                postDescription?.isEnabled = false
-            }else{
+            if(TrainHubApplication.Globals.currentUser!!.id == user?.id){
+                //If the post belongs to the current user
+                editBtn?.visibility = View.VISIBLE
+                deleteBtn?.visibility = View.VISIBLE
+                postTitle?.isEnabled = true
+                postDescription?.isEnabled = true
                 postImage!!.setOnClickListener {
                     openImagePicker()
                 }
                 selectedImageUri = Uri.parse(post?.imageUrl)
             }
+            progressBar?.visibility = View.GONE
         }
 
         arguments?.getString("postId")?.let {postId->
+            progressBar?.visibility = View.VISIBLE
             postDetailsViewModel.fetchPost(postId)
 
         }
 
         deleteBtn?.setOnClickListener{
+            progressBar?.visibility = View.VISIBLE
             postDetailsViewModel.deletePost(post!!)
         }
 
         postDetailsViewModel.saveStatus.observe(viewLifecycleOwner){
+            progressBar?.visibility = View.GONE
             if(it){
                 Toast.makeText(context, "Post saved changes!", Toast.LENGTH_SHORT).show()
             }else{
@@ -113,6 +131,7 @@ class PostDetailsFragment : Fragment() {
         }
 
         postDetailsViewModel.deleteStatus.observe(viewLifecycleOwner){
+            progressBar?.visibility = View.GONE
             if(it){
                 findNavController().navigateUp()
             }else{
@@ -123,7 +142,7 @@ class PostDetailsFragment : Fragment() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){loadedProfileImageInPickerHandler(it)}
 
         editBtn?.setOnClickListener(){
-            println(post!!)
+            progressBar?.visibility = View.VISIBLE
             post!!.title = postTitle?.text.toString()
             post!!.description = postDescription?.text.toString()
             post!!.imageUrl = selectedImageUri.toString()
