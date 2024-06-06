@@ -54,6 +54,33 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.HomeFragment -> {
+                    navController?.navigate(R.id.HomeFragment)
+                    true
+                }
+                R.id.DiscoverFragment -> {
+                    navController?.navigate(R.id.discoverFragment)
+                    true
+                }
+                R.id.addPostFragment -> {
+                    navController?.navigate(R.id.AddPostFragment)
+                    true
+                }
+                R.id.LocationFragment -> {
+                    navController?.navigate(R.id.LocationFragment)
+                    true
+                }
+                R.id.ProfileFragment -> {
+                    navController?.navigate(R.id.ProfileFragment)
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
     fun moveToHome(){
         bottomNavigationView?.selectedItemId = R.id.icHome
@@ -66,7 +93,9 @@ class MainActivity : AppCompatActivity() {
             transaction.replace(R.id.navHostMain,fragment)
             transaction.commit()
         }
+
     }
+
 
 
 }
