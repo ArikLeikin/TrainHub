@@ -15,14 +15,17 @@ import com.example.trainhub.viewModel.PostWithUser
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class PostRecyclerAdapter(var posts: List<PostWithUser>) :
+class PostRecyclerAdapter(var posts: List<PostWithUser>, private var isClickable:Boolean) :
+
     RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
     val storage = Firebase.storage
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         val profileImg: ImageFilterView = itemView.findViewById(R.id.ifPostProfileImg)
         val titleTextView: TextView = itemView.findViewById(R.id.tvCardTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.tvDescription)
         val postImg: ImageView = itemView.findViewById(R.id.ifPostImg)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -45,6 +48,15 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
             .load(currentItem.user?.profileImageUrl)
             .into(holder.profileImg)
         Log.d(TAG,"PROFILE IMAGE: profile_images/${currentItem.user?.profileImageUrl}")
+
+
+        if (isClickable) {
+            holder.itemView.setOnClickListener {
+                Log.d("post", "Item clicked: ${currentItem.post.title}")
+            }
+
+        }
+
     }
 
     override fun getItemCount(): Int {
