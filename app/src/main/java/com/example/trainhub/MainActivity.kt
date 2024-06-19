@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.trainhub.fragments.AddPostFragment
 import com.example.trainhub.fragments.DiscoverFragment
+import com.example.trainhub.fragments.EditProfileFragment
 import com.example.trainhub.fragments.HomeFragment
 import com.example.trainhub.fragments.LocationFragment
 import com.example.trainhub.fragments.ProfileFragment
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val locationFragment = LocationFragment()
     private val profileFragment = ProfileFragment()
     private val addPostFragment = AddPostFragment()
+    private val editProfileFragment = EditProfileFragment()
     private var bottomNavigationView:BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -88,6 +90,11 @@ class MainActivity : AppCompatActivity() {
 //        }
 
     }
+    fun moveToEditProfile(){
+        val activity = this
+        activity.replaceFragment(editProfileFragment)
+    }
+
     fun moveToHome(){
         bottomNavigationView?.selectedItemId = R.id.icHome
         replaceFragment(homeFragment)
