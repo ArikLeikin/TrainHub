@@ -57,35 +57,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-       bottomNavigationView?.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-
-                R.id.icHome -> {
-
-                    navController?.navigate(R.id.homeFragment)
-                    true
-                }
-                R.id.icDiscover -> {
-
-                    navController?.navigate(R.id.discoverFragment)
-                    true
-                }
-                R.id.icAddPost -> {
-                    navController?.navigate(R.id.addPostFragment)
-                    true
-                }
-                R.id.icLocation -> {
-                    navController?.navigate(R.id.locationFragment)
-                    true
-                }
-                R.id.icProfile -> {
-                    navController?.navigate(R.id.profileFragment)
-                    true
-                }
-                else -> false
-
-            }
-        }
+//       bottomNavigationView?.setOnItemSelectedListener { item ->
+//            when (item.itemId) {
+//
+//                R.id.icHome -> {
+//
+//                    navController?.navigate(R.id.homeFragment)
+//                    true
+//                }
+//                R.id.icDiscover -> {
+//
+//                    navController?.navigate(R.id.discoverFragment)
+//                    true
+//                }
+//                R.id.icAddPost -> {
+//                    navController?.navigate(R.id.addPostFragment)
+//                    true
+//                }
+//                R.id.icLocation -> {
+//                    navController?.navigate(R.id.locationFragment)
+//                    true
+//                }
+//                R.id.icProfile -> {
+//                    navController?.navigate(R.id.profileFragment)
+//                    true
+//                }
+//                else -> false
+//
+//            }
+//        }
 
     }
     fun moveToHome(){
