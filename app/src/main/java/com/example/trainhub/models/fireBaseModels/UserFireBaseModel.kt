@@ -1,9 +1,12 @@
 package com.example.trainhub.models.fireBaseModels
 
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.example.trainhub.models.entities.User
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
@@ -13,6 +16,8 @@ import org.json.JSONObject
 import java.sql.Date
 
 class UserFireBaseModel: FirebaseModel() {
+    private lateinit var pd: ProgressDialog
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
         val auth: FirebaseAuth by lazy {
@@ -170,6 +175,30 @@ class UserFireBaseModel: FirebaseModel() {
             callback(it)
         }
     }
+
+    fun changePassword(oldPassword: String, newPassword: String, callback: (Boolean) -> Unit){
+        val user = auth.currentUser
+        val credential = EmailAuthProvider.getCredential(user?.email!!, oldPassword)
+        user.reauthenticate(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                user.updatePassword(newPassword).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.i(TAG, "Password updated")
+                        callback(true)
+                    } else {
+                        Log.e(TAG, "Password update failed", task.exception)
+                        callback(false)
+                    }
+                }
+            } else {
+                Log.e(TAG, "Re-authentication failed", task.exception)
+                callback(false)
+            }
+        }
+    }
+
+
+
 
 
 }

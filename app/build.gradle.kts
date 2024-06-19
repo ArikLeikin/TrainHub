@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.firebase.database.ktx)
     val room_version = "2.6.1"
     val lifecycle_version = "2.8.1"
     val mediaVersion = "1.3.1"
