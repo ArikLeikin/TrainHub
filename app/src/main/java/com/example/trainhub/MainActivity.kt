@@ -10,12 +10,10 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.trainhub.fragments.AddPostFragment
 import com.example.trainhub.fragments.DiscoverFragment
-import com.example.trainhub.fragments.EditProfileFragment
 import com.example.trainhub.fragments.HomeFragment
 import com.example.trainhub.fragments.LocationFragment
 import com.example.trainhub.fragments.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 class MainActivity : AppCompatActivity() {
     private var navController: NavController? = null
@@ -24,7 +22,6 @@ class MainActivity : AppCompatActivity() {
     private val locationFragment = LocationFragment()
     private val profileFragment = ProfileFragment()
     private val addPostFragment = AddPostFragment()
-    private val editProfileFragment = EditProfileFragment()
     private var bottomNavigationView:BottomNavigationView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         bottomNavigationView?.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.icHome -> replaceFragment(homeFragment)
@@ -46,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.icLocation -> replaceFragment(locationFragment)
                 R.id.icProfile -> replaceFragment(profileFragment)
             }
+
             true
         }
 
@@ -59,40 +56,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//       bottomNavigationView?.setOnItemSelectedListener { item ->
-//            when (item.itemId) {
-//
-//                R.id.icHome -> {
-//
-//                    navController?.navigate(R.id.homeFragment)
-//                    true
-//                }
-//                R.id.icDiscover -> {
-//
-//                    navController?.navigate(R.id.discoverFragment)
-//                    true
-//                }
-//                R.id.icAddPost -> {
-//                    navController?.navigate(R.id.addPostFragment)
-//                    true
-//                }
-//                R.id.icLocation -> {
-//                    navController?.navigate(R.id.locationFragment)
-//                    true
-//                }
-//                R.id.icProfile -> {
-//                    navController?.navigate(R.id.profileFragment)
-//                    true
-//                }
-//                else -> false
-//
-//            }
-//        }
 
-    }
-    fun moveToEditProfile(){
-        val activity = this
-        activity.replaceFragment(editProfileFragment)
+
     }
 
     fun moveToHome(){
@@ -100,7 +65,10 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(homeFragment)
     }
 
-    fun replaceFragment(fragment: Fragment){
+    fun replaceFragment(fragment: Fragment,bundle: Bundle? = null){
+        if(bundle!=null){
+            fragment.arguments = bundle
+        }
         if(fragment!=null){
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.navHostMain,fragment)
