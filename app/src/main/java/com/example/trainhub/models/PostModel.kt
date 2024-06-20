@@ -83,7 +83,10 @@ class PostModel private constructor() {
                 }
                 callback(posts)
             }else{
-                callback(null)
+                println("No posts in FireStore OR NO INTERNET CONNECTION!!!")
+                TrainHubApplication.Globals.executorService.execute{
+                    callback(roomDatabase.postDao().getAllPosts())
+                }
             }
         }
     }
