@@ -3,6 +3,7 @@ package com.example.trainhub
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -23,6 +24,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
     private var navController: NavController? = null
     private val homeFragment = HomeFragment()
+    private val discoverFragment = DiscoverFragment()
+    private val locationFragment = LocationFragment()
+    private val profileFragment = ProfileFragment()
+    private val addPostFragment = AddPostFragment()
     private var bottomNavigationView:BottomNavigationView? = null
     private val preferences: SharedPreferences = TrainHubApplication.Globals.appContext!!.getSharedPreferences("user_session", Context.MODE_PRIVATE)
     private val vm = MainActivityViewModel()
@@ -31,21 +36,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navHostFragment: NavHostFragment? = supportFragmentManager.findFragmentById(R.id.navHostMain) as? NavHostFragment
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView?.let {
             Navigation.setViewNavController(it, navController)
         }
 
 
-        val discoverFragment = DiscoverFragment()
-        val locationFragment = LocationFragment()
-        val profileFragment = ProfileFragment()
 
         bottomNavigationView?.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.icHome -> replaceFragment(homeFragment)
                 R.id.icDiscover -> replaceFragment(discoverFragment)
-                R.id.icAddPost -> replaceFragment(AddPostFragment())
+                R.id.icAddPost -> replaceFragment(addPostFragment)
                 R.id.icLocation -> replaceFragment(locationFragment)
                 R.id.icProfile -> replaceFragment(profileFragment)
             }
@@ -73,7 +75,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
     }
     fun moveToHome(){
         bottomNavigationView?.selectedItemId = R.id.icHome
@@ -86,7 +87,9 @@ class MainActivity : AppCompatActivity() {
             transaction.replace(R.id.navHostMain,fragment)
             transaction.commit()
         }
+
     }
+
 
 
 }
