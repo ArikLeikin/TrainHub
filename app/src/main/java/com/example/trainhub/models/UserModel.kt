@@ -105,4 +105,21 @@ class UserModel private constructor() {
             }
         }
     }
+
+    fun updateProfilePic(user: User, uri: Uri, callback: (Boolean) -> Unit){
+        userFireBaseModel.uploadImageToFireStorage(uri){ result->
+            if(result!=null){
+                user.profileImageUrl = result
+                updateUser(user){isUpdated->
+                    if(isUpdated){
+                        callback(true)
+                    }else{
+                        callback(false)
+                    }
+                }
+            }else{
+                callback(false)
+            }
+        }
+    }
 }

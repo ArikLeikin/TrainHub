@@ -8,6 +8,20 @@
 
 
     <ImageView
+        android:id="@+id/ic_logout"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_logout"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="101dp"
         android:layout_height="72dp"
@@ -55,14 +69,12 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="50dp"
         android:text="My Posts"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnEdit" />
 
@@ -75,5 +87,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.187" />
 </androidx.constraintlayout.widget.ConstraintLayout>

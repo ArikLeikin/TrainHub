@@ -1,6 +1,10 @@
 package com.example.trainhub.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,17 +16,23 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trainhub.R
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.adapters.PostRecyclerAdapter
+import com.example.trainhub.models.entities.User
+import com.example.trainhub.services.SharedPrefHelper
 import com.example.trainhub.viewModel.PostWithUser
 import com.example.trainhub.viewModel.ProfileViewModel
 
 class ProfileFragment : Fragment() {
-
+    private val pb: ProgressBar? = null
     private lateinit var recyclerViewPosts: RecyclerView
     private lateinit var postsAdapter: PostRecyclerAdapter
     private var postsList: List<PostWithUser> = listOf()
@@ -31,36 +41,43 @@ class ProfileFragment : Fragment() {
     private var email:TextView? = null
     private var profilePic:ImageView? = null
     private var btnEdit : Button? = null
-
-
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
+    private var selectedImageUri: Uri? = null
+    private var filePath: String? = null
+    private var userId: String? = null
+    private var lastUpdated: Long = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-
+        profileViewModel.profilePic.observe(viewLifecycleOwner, Observer { newProfilePic ->
+            Glide.with(this).load(newProfilePic).into(profilePic!!)
+        })
+            userId = TrainHubApplication.Globals.currentUser?.id
             name = view.findViewById(R.id.etName)
             email = view.findViewById(R.id.tvEmail)
             profilePic = view.findViewById(R.id.ivProfile)
             btnEdit = view.findViewById(R.id.btnEdit)
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){loadedProfileImageInPickerHandler(it)}
 
-
-        val imageUrl = TrainHubApplication.Globals.currentUser?.profileImageUrl
-        Log.d("ProfileFragment", "onCreateView: $imageUrl")
+        val sharedPrefHelper = SharedPrefHelper(requireContext())
             email?.text = TrainHubApplication.Globals.currentUser?.email
              name?.text = TrainHubApplication.Globals.currentUser?.name
+            lastUpdated = TrainHubApplication.Globals.currentUser?.lastUpdated!!
 
 
-        if (imageUrl != null && imageUrl.startsWith("http")) {
-            Glide.with(this).load(imageUrl).into(profilePic!!)
+        val savedImageUri = sharedPrefHelper.getProfilePicUri()
+        Log.d("ProfileFragment", "Saved Image URI: $savedImageUri")
+        if (savedImageUri != null) {
+            Glide.with(this).load(savedImageUri).into(profilePic!!)
         } else {
             Glide.with(this).load(R.drawable.user_profile).into(profilePic!!)
         }
 
         btnEdit?.setOnClickListener {
             val view = layoutInflater.inflate(R.layout.dialog_update_name, null)
-            val pb: ProgressBar? = null
             val oldN = view.findViewById<EditText>(R.id.old_name)
             val newN = view.findViewById<EditText>(R.id.new_name)
             val builder = android.app.AlertDialog.Builder(context)
@@ -96,6 +113,12 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        profilePic?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            imagePickerLauncher.launch(intent)
+        }
+
 
 
         recyclerViewPosts = view.findViewById(R.id.rvMyPosts)
@@ -115,7 +138,48 @@ class ProfileFragment : Fragment() {
         return view
 
     }
+    private fun loadedProfileImageInPickerHandler(result: ActivityResult){
 
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedImageUri = data?.data
+            if (selectedImageUri != null) {
+                filePath = getImageFilePath(selectedImageUri!!)
+                Log.d("ProfileFragment", "loadedProfileImageInPickerHandler: ${filePath.toString()}")
+                val sharedPrefHelper = SharedPrefHelper(requireContext())
+                sharedPrefHelper.saveProfilePicUri(selectedImageUri.toString()
+                )
+                Log.d("ProfileFragment", "loadedProfileImageInPickerHandler: ${selectedImageUri.toString()}")
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .into(profilePic!!)
+
+               val user = User(userId!!,email?.text.toString(),filePath.toString(),name?.text.toString(),lastUpdated)
+
+                profileViewModel.updateProfileImage(user, selectedImageUri!!) { isUpdated ->
+                    if (isUpdated) {
+                        TrainHubApplication.Globals.currentUser?.profileImageUrl = filePath.toString()
+                        Toast.makeText(context, "Profile image updated successfully", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+            }
+
+        }
+
+
+    }
+    private fun getImageFilePath(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context?.contentResolver?.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            it.moveToFirst()
+            return it.getString(columnIndex)
+        }
+        return null
+    }
 
 
 }

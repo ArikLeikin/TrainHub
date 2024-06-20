@@ -1,5 +1,6 @@
 package com.example.trainhub.viewModel
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ class ProfileViewModel: ViewModel() {
 
     private val _posts = MutableLiveData<List<PostWithUser>>()
     private val _user = MutableLiveData<User>()
+    val profilePic: MutableLiveData<String> = MutableLiveData<String>()
     val posts: LiveData<List<PostWithUser>> get() = _posts
     val user: LiveData<User> get() = _user
 
@@ -33,22 +35,27 @@ class ProfileViewModel: ViewModel() {
     fun updateProfile(user: User, callback: (Boolean) -> Unit){
        um.updateUser(user){isUpdated->
            if(isUpdated) {
-               UserModel.instance.updateUser(user) { isLocalUpdateSuccessful ->
-                   if (isLocalUpdateSuccessful) {
-                       _user.value = user
-                   }
-               }
-               callback(isUpdated)
+                _user.value = user
+                callback(true)
            }
            else{
                 callback(false)
            }
-        }
-
-
+       }
 
     }
 
+    fun updateProfileImage(user: User, uri: Uri, callback: (Boolean) -> Unit){
+        um.updateProfilePic(user,uri) { isUpdated ->
+            if (isUpdated) {
+                _user.value = user
+                profilePic.value = user.profileImageUrl // Update the LiveData object
+                callback(true)
+            } else {
+                callback(false)
+            }
 
+        }
+    }
 
 }
