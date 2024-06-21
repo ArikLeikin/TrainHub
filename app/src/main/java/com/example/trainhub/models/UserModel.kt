@@ -88,6 +88,7 @@ class UserModel private constructor() {
     }
 
     fun logout(user:User){
+        userFireBaseModel.signOut()
         TrainHubApplication.Globals.currentUser = null
         TrainHubApplication.Globals.executorService.execute {
             roomDatabase.userDao().deleteUser(user)

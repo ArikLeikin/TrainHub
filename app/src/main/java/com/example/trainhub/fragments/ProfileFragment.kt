@@ -20,9 +20,11 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.trainhub.MainActivity
 import com.example.trainhub.R
 import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.adapters.PostRecyclerAdapter
@@ -46,6 +48,7 @@ class ProfileFragment : Fragment() {
     private var filePath: String? = null
     private var userId: String? = null
     private var lastUpdated: Long = 0
+    private var logout:TextView? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,17 +58,34 @@ class ProfileFragment : Fragment() {
         profileViewModel.profilePic.observe(viewLifecycleOwner, Observer { newProfilePic ->
             Glide.with(this).load(newProfilePic).into(profilePic!!)
         })
+
             userId = TrainHubApplication.Globals.currentUser?.id
             name = view.findViewById(R.id.etName)
             email = view.findViewById(R.id.tvEmail)
             profilePic = view.findViewById(R.id.ivProfile)
             btnEdit = view.findViewById(R.id.btnEdit)
+            logout = view.findViewById(R.id.tvlogout)
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){loadedProfileImageInPickerHandler(it)}
 
-        val sharedPrefHelper = SharedPrefHelper(requireContext())
+        var sharedPrefHelper = SharedPrefHelper(requireContext())
             email?.text = TrainHubApplication.Globals.currentUser?.email
              name?.text = TrainHubApplication.Globals.currentUser?.name
             lastUpdated = TrainHubApplication.Globals.currentUser?.lastUpdated!!
+
+
+        logout?.setOnClickListener {
+            Log.d("ProfileFragment", "Logout clicked")
+            Log.d("ProfileFragment", "Current user: ${TrainHubApplication.Globals.currentUser}")
+
+            profileViewModel.handleLogout(TrainHubApplication.Globals.currentUser!!) {
+              sharedPrefHelper = SharedPrefHelper(requireContext())
+               sharedPrefHelper.clearAll()
+
+                val intent = Intent(context, MainActivity::class.java)
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
 
 
         val savedImageUri = sharedPrefHelper.getProfilePicUri()
@@ -139,7 +159,7 @@ class ProfileFragment : Fragment() {
 
     }
     private fun loadedProfileImageInPickerHandler(result: ActivityResult){
-
+            pb?.visibility = View.VISIBLE
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             selectedImageUri = data?.data
@@ -158,6 +178,7 @@ class ProfileFragment : Fragment() {
 
                 profileViewModel.updateProfileImage(user, selectedImageUri!!) { isUpdated ->
                     if (isUpdated) {
+                        pb?.visibility = View.GONE
                         TrainHubApplication.Globals.currentUser?.profileImageUrl = filePath.toString()
                         Toast.makeText(context, "Profile image updated successfully", Toast.LENGTH_SHORT).show()
                     }

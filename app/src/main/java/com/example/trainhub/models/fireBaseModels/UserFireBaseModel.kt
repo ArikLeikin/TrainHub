@@ -51,6 +51,10 @@ class UserFireBaseModel: FirebaseModel() {
         }
     }
 
+    fun signOut(){
+        auth.signOut()
+    }
+
     fun deleteUserAuth(callback: (Boolean) -> Unit){
         auth.currentUser?.delete()?.addOnCompleteListener{ task ->
             if(task.isSuccessful){

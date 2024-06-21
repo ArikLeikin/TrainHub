@@ -58,4 +58,10 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    fun handleLogout(user: User,callback: (Boolean) -> Unit) {
+        um.logout(user)
+        callback(true)
+    }
+
+
 }

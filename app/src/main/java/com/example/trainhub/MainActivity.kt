@@ -65,10 +65,8 @@ class MainActivity : AppCompatActivity() {
         replaceFragment(homeFragment)
     }
 
-    fun replaceFragment(fragment: Fragment,bundle: Bundle? = null){
-        if(bundle!=null){
-            fragment.arguments = bundle
-        }
+
+    fun replaceFragment(fragment: Fragment){
         if(fragment!=null){
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.navHostMain,fragment)

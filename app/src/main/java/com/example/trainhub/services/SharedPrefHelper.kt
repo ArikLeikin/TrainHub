@@ -21,4 +21,10 @@ class SharedPrefHelper(context: Context){
         Log.d("SharedPrefHelper", "getProfilePicUri: ${prefs.getString(PROFILE_PIC_URI, TrainHubApplication.Globals.currentUser?.profileImageUrl)}")
         return prefs.getString(PROFILE_PIC_URI, TrainHubApplication.Globals.currentUser?.profileImageUrl)
     }
+
+fun clearAll(){
+        editor.clear()
+        editor.apply()
+    }
+
 }
