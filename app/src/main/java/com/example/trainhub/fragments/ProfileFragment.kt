@@ -34,7 +34,7 @@ import com.example.trainhub.viewModel.PostWithUser
 import com.example.trainhub.viewModel.ProfileViewModel
 
 class ProfileFragment : Fragment() {
-    private val pb: ProgressBar? = null
+    private var pb: ProgressBar? = null
     private lateinit var recyclerViewPosts: RecyclerView
     private lateinit var postsAdapter: PostRecyclerAdapter
     private var postsList: List<PostWithUser> = listOf()
@@ -55,10 +55,8 @@ class ProfileFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        profileViewModel.profilePic.observe(viewLifecycleOwner, Observer { newProfilePic ->
-            Glide.with(this).load(newProfilePic).into(profilePic!!)
-        })
 
+            pb = view.findViewById(R.id.pbUpdateProfile)
             userId = TrainHubApplication.Globals.currentUser?.id
             name = view.findViewById(R.id.etName)
             email = view.findViewById(R.id.tvEmail)
@@ -108,7 +106,6 @@ class ProfileFragment : Fragment() {
             val dialog = builder.create()
             dialog.show()
             view.findViewById<Button>(R.id.update_name_btn).setOnClickListener {
-                pb?.visibility = View.VISIBLE
                 val newName = newN.text.toString()
                 if(newName.isEmpty()){
                     newN.error = "Name cannot be empty"
@@ -123,7 +120,6 @@ class ProfileFragment : Fragment() {
                     user?.name = newName
                     profileViewModel.updateProfile(user!!) { isUpdated ->
                         if (isUpdated) {
-                            pb?.visibility = View.GONE
                             name?.text = newName
                             Toast.makeText(context, "Name updated successfully", Toast.LENGTH_SHORT).show()
                             dialog.dismiss()
@@ -178,7 +174,7 @@ class ProfileFragment : Fragment() {
 
                 profileViewModel.updateProfileImage(user, selectedImageUri!!) { isUpdated ->
                     if (isUpdated) {
-                        pb?.visibility = View.GONE
+
                         TrainHubApplication.Globals.currentUser?.profileImageUrl = filePath.toString()
                         Toast.makeText(context, "Profile image updated successfully", Toast.LENGTH_SHORT).show()
                     }
@@ -189,7 +185,11 @@ class ProfileFragment : Fragment() {
 
         }
 
-
+        profileViewModel.profilePic.observe(viewLifecycleOwner, Observer { newProfilePic ->
+            pb?.visibility = View.GONE
+            Glide.with(this).load(newProfilePic).into(profilePic!!)
+            postsAdapter.updateUserProfilePic(newProfilePic)
+        })
     }
     private fun getImageFilePath(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)

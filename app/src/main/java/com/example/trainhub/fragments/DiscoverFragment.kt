@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
@@ -24,18 +25,19 @@ class DiscoverFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var exerciseAdapter: ExerciseAdapter
     private var exerciseList: List<Exercise> = listOf()
+    private var pb: ProgressBar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_discover, container, false)
-
+        pb = view.findViewById(R.id.pbDiscover)
         recyclerView = view.findViewById(R.id.rvExercises)
         recyclerView.layoutManager = LinearLayoutManager(context)
         exerciseAdapter = ExerciseAdapter(exerciseList)
         recyclerView.adapter = exerciseAdapter
-
+        pb?.visibility = View.VISIBLE
         fetchExercises()
 
         return view
@@ -56,9 +58,9 @@ class DiscoverFragment : Fragment() {
 
         responseLiveData.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful) {
+                pb?.visibility = View.GONE
                 exerciseList = response.body() ?: listOf()
                 Log.d("API Response", "Fetched exercises: $exerciseList")
-
                 // Update the adapter
                 exerciseAdapter = ExerciseAdapter(exerciseList)
                 recyclerView.adapter = exerciseAdapter

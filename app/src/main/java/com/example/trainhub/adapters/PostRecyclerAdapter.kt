@@ -1,6 +1,7 @@
 package com.example.trainhub.adapters
 
 import android.content.ContentValues.TAG
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.trainhub.MainActivity
 import com.example.trainhub.R
+import com.example.trainhub.fragments.PostDetailsFragment
 import com.example.trainhub.viewModel.PostWithUser
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -33,6 +36,13 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>, private var isClickable
         return PostViewHolder(itemView)
     }
 
+    fun updateUserProfilePic(newProfilePic: String) {
+        for (postWithUser in posts) {
+            postWithUser.user?.profileImageUrl = newProfilePic
+        }
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentItem = posts[position]
         holder.titleTextView.text = currentItem.post.title
@@ -52,7 +62,17 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>, private var isClickable
 
         if (isClickable) {
             holder.itemView.setOnClickListener {
-                Log.d("post", "Item clicked: ${currentItem.post.title}")
+                Log.d(TAG, "Post clicked")
+                val transaction = (holder.itemView.context as MainActivity).supportFragmentManager.beginTransaction()
+                val frag = PostDetailsFragment()
+                val bundle = Bundle()
+               frag.arguments = bundle
+                bundle.putString("postId", currentItem.post.id)
+                transaction.replace(R.id.navHostMain, frag)
+                transaction.addToBackStack(null)
+                transaction.commit()
+
+
             }
 
         }
