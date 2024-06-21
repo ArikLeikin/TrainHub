@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/AddPostFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/AddPostFragment"
+    android:background="@color/black"
     tools:context=".fragments.AddPostFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -28,12 +29,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivAddPostImage"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="200dp"
         android:layout_marginTop="24dp"
         android:clickable="true"
@@ -49,14 +49,23 @@
         app:layout_constraintTop_toBottomOf="@+id/ivAddPostDetailsLogo" />
 
     <EditText
-        android:id="@+id/etAddPostTitle"
+        android:id="@+id/etAddPostDescription"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="Title"
-        android:inputType="text"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/phDarkGray"
+        android:ellipsize="none"
+        android:gravity="top|start"
+        android:hint="Description"
+        android:inputType="textMultiLine|text"
+        android:lines="6"
+        android:maxLines="6"
+        android:minLines="1"
         android:padding="10dp"
+        android:scrollHorizontally="false"
+        android:textAlignment="viewStart"
         android:textColor="@color/colorHintText"
         android:textColorHint="@color/colorHintText"
         android:textSize="24sp"
@@ -64,36 +73,18 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivAddPostImage" />
-    <EditText
-        android:id="@+id/etAddPostDescription"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="24dp"
-        android:textAlignment="center"
-        android:ems="10"
-        android:hint="Description"
-        android:inputType="text"
-        android:padding="10dp"
-        android:textColor="@color/colorHintText"
-        android:textColorHint="@color/colorHintText"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etAddPostTitle" />
-
-
 
     <Button
         android:id="@+id/btnAddPost"
         android:layout_width="200dp"
         android:layout_height="60dp"
-        android:layout_marginTop="48dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/phBlack"
         android:text="Add Post"
         android:textColor="@color/white"
         android:textSize="23sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etAddPostDescription" />
 
