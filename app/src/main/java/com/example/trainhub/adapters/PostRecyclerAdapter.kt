@@ -32,7 +32,7 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentItem = posts[position]
-        holder.titleTextView.text = currentItem.post.title
+        holder.titleTextView.text = currentItem.user?.email
         holder.descriptionTextView.text = currentItem.post.description
 
         Glide.with(holder.itemView.context)

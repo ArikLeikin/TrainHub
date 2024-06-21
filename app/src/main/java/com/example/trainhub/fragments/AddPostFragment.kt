@@ -8,7 +8,6 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.trainhub.MainActivity
 import com.example.trainhub.R
@@ -58,7 +58,7 @@ class AddPostFragment : Fragment() {
 
     private fun setUpUI(view: View) {
         postImage = view.findViewById(R.id.ivAddPostImage)
-        postTitle = view.findViewById(R.id.etAddPostTitle)
+//        postTitle = view.findViewById(R.id.etAddPostTitle)
         description = view.findViewById(R.id.etAddPostDescription)
         addPostButton = view.findViewById(R.id.btnAddPost)
         pb = view.findViewById(R.id.pbAddPost)
@@ -69,31 +69,44 @@ class AddPostFragment : Fragment() {
         }
 
         addPostButton?.setOnClickListener{
-            pb?.visibility = View.VISIBLE
-            getLocation(){locationIsSet->
-                if(locationIsSet){
-                    //add post
-                    println(postLocation)
+            if(validateInputs()){
+                pb?.visibility = View.VISIBLE
+                getLocation(){locationIsSet->
+                    if(locationIsSet){
+                        //add post
+                        println(postLocation)
 
-                    val post = Post("",postTitle?.text.toString(), description?.text.toString(),"", TrainHubApplication.Globals.currentUser!!.id,"asdasdqwe",postLocation!!)
+                        val post = Post("","", description?.text.toString(),"", TrainHubApplication.Globals.currentUser!!.id,"asdasdqwe",postLocation!!)
 
-                    post.imageUrl = selectedImageUri.toString()
-                    AddPostViewModel.addPost(post){
-                        if(it){
+                        post.imageUrl = selectedImageUri.toString()
+                        AddPostViewModel.addPost(post){
+                            if(it){
+                                Toast.makeText(context, "Post added successfully", Toast.LENGTH_SHORT).show()
+                                val activity = context as MainActivity
+                                activity.moveToHome()
+                            }else{
+                                Toast.makeText(context, "Failed to add post", Toast.LENGTH_SHORT).show()
+                            }
                             pb?.visibility = View.GONE
-                            Toast.makeText(context, "Post added successfully", Toast.LENGTH_SHORT).show()
-                            val activity = context as MainActivity
-                            activity.moveToHome()
-                        }else{
-                            Toast.makeText(context, "Failed to add post", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-
             }
         }
+    }
 
+    private fun validateInputs(): Boolean {
+        if (description?.text?.length!! < 3) {
+            Toast.makeText(context, "Description is too short", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
+        if (selectedImageUri == null) {
+            Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
     }
 
     private fun loadedProfileImageInPickerHandler(result: ActivityResult){
@@ -135,8 +148,6 @@ class AddPostFragment : Fragment() {
                         val latitude = location.latitude
                         val longitude = location.longitude
                         postLocation = "$latitude,$longitude"
-                        // Use the latitude and longitude as needed
-//                        Toast.makeText(context, "Latitude: $latitude, Longitude: $longitude", Toast.LENGTH_LONG).show()
                         callback(true)
                     } else {
                         Toast.makeText(context, "Unable to get location", Toast.LENGTH_SHORT).show()

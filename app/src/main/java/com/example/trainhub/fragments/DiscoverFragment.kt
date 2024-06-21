@@ -2,10 +2,11 @@ package com.example.trainhub.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
@@ -51,6 +52,8 @@ class DiscoverFragment : Fragment() {
                 emit(response)
             } catch (e: Exception) {
                 Log.e("API Error", "Exception occurred: ${e.message}")
+                // Show toast message if there's an error
+                showToast("Failed to fetch exercises. Please try again later.")
             }
         }
 
@@ -67,7 +70,13 @@ class DiscoverFragment : Fragment() {
                 Log.e("API Error", "Failed to fetch exercises: ${response.code()}, ${response.message()}")
                 Log.e("API Error", "Response Body: ${response.errorBody()?.string()}")
                 Log.e("API Error", "Response Headers: ${response.headers()}")
+                // Show toast message if response is not successful
+                showToast("Failed to fetch exercises. Please try again later.")
             }
         })
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
