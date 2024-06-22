@@ -116,6 +116,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
         }
 
         transaction?.replace(R.id.navHostMain, frag)
+        transaction?.addToBackStack(null)
         transaction?.commit()
         return true
     }
@@ -125,7 +126,6 @@ class LocationFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
             val latitude = post.location.split(",")[0].toDouble()
             val longitude = post.location.split(",")[1].toDouble()
             val location = LatLng(latitude, longitude)
-
             val marker = googleMap.addMarker(
                 MarkerOptions()
                     .position(location)

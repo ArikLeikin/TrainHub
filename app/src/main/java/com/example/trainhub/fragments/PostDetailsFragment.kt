@@ -133,7 +133,8 @@ class PostDetailsFragment : Fragment() {
         postDetailsViewModel.deleteStatus.observe(viewLifecycleOwner){
             progressBar?.visibility = View.GONE
             if(it){
-                findNavController().navigateUp()
+                println("DELETED")
+                requireActivity().supportFragmentManager.popBackStackImmediate()
             }else{
                 Toast.makeText(context, "Error! Post not deleted!", Toast.LENGTH_SHORT).show()
             }
