@@ -14,8 +14,10 @@ import com.example.trainhub.R
 import com.example.trainhub.viewModel.PostWithUser
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-
-class PostRecyclerAdapter(var posts: List<PostWithUser>) :
+import android.os.Bundle
+import com.example.trainhub.MainActivity
+import com.example.trainhub.fragments.PostDetailsFragment
+class PostRecyclerAdapter(var posts: List<PostWithUser>,private var isClickable:Boolean) :
     RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
     val storage = Firebase.storage
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,7 +31,12 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false)
         return PostViewHolder(itemView)
     }
-
+    fun updateUserProfilePic(newProfilePic: String) {
+        for (postWithUser in posts) {
+            postWithUser.user?.profileImageUrl = newProfilePic
+        }
+        notifyDataSetChanged()
+    }
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentItem = posts[position]
         holder.titleTextView.text = currentItem.user?.email
@@ -45,6 +52,24 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>) :
             .load(currentItem.user?.profileImageUrl)
             .into(holder.profileImg)
         Log.d(TAG,"PROFILE IMAGE: profile_images/${currentItem.user?.profileImageUrl}")
+
+
+        if (isClickable) {
+            holder.itemView.setOnClickListener {
+                Log.d(TAG, "Post clicked")
+                val transaction = (holder.itemView.context as MainActivity).supportFragmentManager.beginTransaction()
+                val frag = PostDetailsFragment()
+                val bundle = Bundle()
+                frag.arguments = bundle
+                bundle.putString("postId", currentItem.post.id)
+                transaction.replace(R.id.navHostMain, frag)
+                transaction.addToBackStack(null)
+                transaction.commit()
+
+
+            }
+
+        }
     }
 
     override fun getItemCount(): Int {

@@ -170,6 +170,8 @@ class UserFireBaseModel: FirebaseModel() {
             callback(it)
         }
     }
-
+    fun signOut(){
+        auth.signOut()
+    }
 
 }
