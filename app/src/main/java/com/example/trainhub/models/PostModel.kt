@@ -43,6 +43,20 @@ class PostModel private constructor() {
     }
 
     fun updatePost(post: Post, hasNewImage:Boolean, callback: (Boolean) -> Unit){
+        if(!hasNewImage){
+            postFireBaseModel.updatePostDocument(post){ isUpdatedInFireStore->
+                if(isUpdatedInFireStore){
+                    TrainHubApplication.Globals.executorService.execute{
+                        roomDatabase.postDao().updatePost(post)
+                    }
+                    callback(true)
+                }else{
+                    Log.e(TAG, "Post not updated in FireStore!!!")
+                    callback(false)
+                }
+            }
+            return
+        }
         postFireBaseModel.uploadImageToFireStorage(Uri.parse(post.imageUrl)){imageName->
             if(imageName!=null){
                 post.imageUrl = imageName
