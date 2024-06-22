@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -119,7 +118,7 @@ class ProfileFragment : Fragment() {
                 if (currentName == TrainHubApplication.Globals.currentUser?.name) {
                     val user = TrainHubApplication.Globals.currentUser
                     user?.name = newName
-                    profileViewModel.updateProfile(user!!,false) { isUpdated ->
+                    profileViewModel.updateProfile(user!!) { isUpdated ->
                         if (isUpdated) {
                             name?.text = newName
                             Toast.makeText(context, "Name updated successfully", Toast.LENGTH_SHORT).show()
@@ -150,17 +149,13 @@ class ProfileFragment : Fragment() {
             postsAdapter.notifyDataSetChanged()
         }
 
-//        setFragmentResultListener("postActionResult") { _, _ ->
-//            profileViewModel.fetchPosts()  // Fetch posts when returning from PostDetailsFragment
-//        }
-
 
 
         return view
 
     }
     private fun loadedProfileImageInPickerHandler(result: ActivityResult){
-
+        pb?.visibility = View.VISIBLE
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
             selectedImageUri = data?.data
@@ -176,8 +171,10 @@ class ProfileFragment : Fragment() {
                     .into(profilePic!!)
 
                 val user = User(userId!!,email?.text.toString(),filePath.toString(),name?.text.toString(),lastUpdated)
-                profileViewModel.updateProfile(user, true) { isUpdated ->
+
+                profileViewModel.updateProfileImage(user, selectedImageUri!!) { isUpdated ->
                     if (isUpdated) {
+
                         TrainHubApplication.Globals.currentUser?.profileImageUrl = filePath.toString()
                         Toast.makeText(context, "Profile image updated successfully", Toast.LENGTH_SHORT).show()
                     }
@@ -189,6 +186,7 @@ class ProfileFragment : Fragment() {
         }
 
         profileViewModel.profilePic.observe(viewLifecycleOwner, Observer { newProfilePic ->
+            pb?.visibility = View.GONE
             Glide.with(this).load(newProfilePic).into(profilePic!!)
             postsAdapter.updateUserProfilePic(newProfilePic)
         })
@@ -202,11 +200,6 @@ class ProfileFragment : Fragment() {
             return it.getString(columnIndex)
         }
         return null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        profileViewModel.fetchPosts()
     }
 
 

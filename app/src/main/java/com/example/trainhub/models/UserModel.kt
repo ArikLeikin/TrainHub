@@ -98,6 +98,7 @@ class UserModel private constructor() {
     }
 
     fun logout(user:User){
+        userFireBaseModel.signOut()
         TrainHubApplication.Globals.currentUser = null
         val editor = preferences.edit()
         editor.putBoolean("is_logged_in", false)
@@ -124,6 +125,22 @@ class UserModel private constructor() {
         TrainHubApplication.Globals.executorService.execute {
             roomDatabase.userDao().getUserById(preferences.getString("userId", "")!!).let {
                 callback(it)
+            }
+        }
+    }
+    fun updateProfilePic(user: User, uri: Uri, callback: (Boolean) -> Unit){
+        userFireBaseModel.uploadImageToFireStorage(uri){ result->
+            if(result!=null){
+                user.profileImageUrl = result
+                updateUser(user){isUpdated->
+                    if(isUpdated){
+                        callback(true)
+                    }else{
+                        callback(false)
+                    }
+                }
+            }else{
+                callback(false)
             }
         }
     }
