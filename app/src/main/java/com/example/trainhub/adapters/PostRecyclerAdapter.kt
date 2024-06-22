@@ -1,6 +1,7 @@
 package com.example.trainhub.adapters
 
 import android.content.ContentValues.TAG
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +11,14 @@ import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.trainhub.MainActivity
 import com.example.trainhub.R
+import com.example.trainhub.fragments.PostDetailsFragment
 import com.example.trainhub.viewModel.PostWithUser
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import android.os.Bundle
-import com.example.trainhub.MainActivity
-import com.example.trainhub.fragments.PostDetailsFragment
-class PostRecyclerAdapter(var posts: List<PostWithUser>,private var isClickable:Boolean) :
+
+class PostRecyclerAdapter(var posts: List<PostWithUser>, private var isClickable:Boolean) :
     RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
     val storage = Firebase.storage
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,12 +32,7 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>,private var isClickable:
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_item, parent, false)
         return PostViewHolder(itemView)
     }
-    fun updateUserProfilePic(newProfilePic: String) {
-        for (postWithUser in posts) {
-            postWithUser.user?.profileImageUrl = newProfilePic
-        }
-        notifyDataSetChanged()
-    }
+
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentItem = posts[position]
         holder.titleTextView.text = currentItem.user?.email
@@ -53,7 +49,6 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>,private var isClickable:
             .into(holder.profileImg)
         Log.d(TAG,"PROFILE IMAGE: profile_images/${currentItem.user?.profileImageUrl}")
 
-
         if (isClickable) {
             holder.itemView.setOnClickListener {
                 Log.d(TAG, "Post clicked")
@@ -65,11 +60,15 @@ class PostRecyclerAdapter(var posts: List<PostWithUser>,private var isClickable:
                 transaction.replace(R.id.navHostMain, frag)
                 transaction.addToBackStack(null)
                 transaction.commit()
-
-
             }
 
         }
+    }
+    fun updateUserProfilePic(newProfilePic: String) {
+        for (postWithUser in posts) {
+            postWithUser.user?.profileImageUrl = newProfilePic
+        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

@@ -42,7 +42,7 @@ class HomeFragment : Fragment() , SwipeRefreshLayout.OnRefreshListener{
         }
 
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
-        postAdapter = PostRecyclerAdapter(listOf(), false)
+        postAdapter = PostRecyclerAdapter(listOf(),false)
         postsRecyclerView?.adapter = postAdapter
 
         return view

@@ -27,6 +27,24 @@ class HomepageViewModel : ViewModel() {
                         }
                     }
                 }
+            }else {
+                um.getCurrentUser { currUser ->
+                    setAllPostsByCurrentUser(currUser!!) {
+                        _posts.postValue(it)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setAllPostsByCurrentUser(user: User,callback:(List<PostWithUser>?)->Unit){
+        val postsWithUsers = mutableListOf<PostWithUser>()
+        pm.getAllPostsByCurrentUser { posts ->
+            posts?.let {
+                posts.forEach { post ->
+                    postsWithUsers.add(PostWithUser(post, user))
+                }
+                callback(postsWithUsers)
             }
         }
     }

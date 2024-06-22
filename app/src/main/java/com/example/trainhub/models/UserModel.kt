@@ -121,7 +121,13 @@ class UserModel private constructor() {
             }
         }
     }
-
+    fun getCurrentUser(callback: (User?) -> Unit) {
+        TrainHubApplication.Globals.executorService.execute {
+            roomDatabase.userDao().getUserById(preferences.getString("userId", "")!!).let {
+                callback(it)
+            }
+        }
+    }
     fun updateProfilePic(user: User, uri: Uri, callback: (Boolean) -> Unit){
         userFireBaseModel.uploadImageToFireStorage(uri){ result->
             if(result!=null){
