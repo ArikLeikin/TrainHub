@@ -120,4 +120,11 @@ class UserModel private constructor() {
             }
         }
     }
+    fun getCurrentUser(callback: (User?) -> Unit) {
+        TrainHubApplication.Globals.executorService.execute {
+            roomDatabase.userDao().getUserById(preferences.getString("userId", "")!!).let {
+                callback(it)
+            }
+        }
+    }
 }

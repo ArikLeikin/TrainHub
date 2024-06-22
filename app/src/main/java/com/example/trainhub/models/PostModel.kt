@@ -1,6 +1,8 @@
 package com.example.trainhub.models
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import com.example.trainhub.TrainHubApplication
@@ -78,24 +80,33 @@ class PostModel private constructor() {
     fun getAllPosts(callback: (List<Post>?) -> Unit){
         postFireBaseModel.getAllPostsDocument{ posts->
             if(posts.isNotEmpty()){
-                TrainHubApplication.Globals.executorService.execute{
-                    roomDatabase.postDao().insertPostList(posts)
-                }
+//                TrainHubApplication.Globals.executorService.execute{
+//                    roomDatabase.postDao().insertPostList(posts)
+//                }
+
                 callback(posts)
             }else{
                 println("No posts in FireStore OR NO INTERNET CONNECTION!!!")
-                TrainHubApplication.Globals.executorService.execute{
-                    callback(roomDatabase.postDao().getAllPosts())
-                }
+                callback(null)
             }
         }
     }
 
+    fun getAllPostsByCurrentUser( callback: (List<Post>?) -> Unit){
+        TrainHubApplication.Globals.executorService.execute{
+            //println(TrainHubApplication.Globals.currentUser)
+            //callback(roomDatabase.postDao().getPostsByUserId(TrainHubApplication.Globals.currentUser!!.id))
+            val preferences: SharedPreferences = TrainHubApplication.Globals.appContext!!.getSharedPreferences("user_session", Context.MODE_PRIVATE)
+            preferences.getString("userId","")?.let {
+                val posts = roomDatabase.postDao().getPostsByUserId(it)
+                println(posts)
+                callback(posts)
+            }
+        }
+    }
     fun getPostById(postId: String, callback: (Post?) -> Unit){
         postFireBaseModel.getPostDocument(postId){ post->
             if(post!=null){
-                //TODO: check if post is already in room database and if post is user's post
-
 //                TrainHubApplication.Globals.executorService.execute{
 //                    roomDatabase.postDao().insert(post)
 //                }
