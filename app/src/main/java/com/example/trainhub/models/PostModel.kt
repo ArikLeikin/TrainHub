@@ -93,7 +93,7 @@ class PostModel private constructor() {
 
     fun getAllPosts(callback: (List<Post>?) -> Unit){
         postFireBaseModel.getAllPostsDocument{ posts->
-            if(posts.isNotEmpty()){
+            if(posts!=null){
 //                TrainHubApplication.Globals.executorService.execute{
 //                    roomDatabase.postDao().insertPostList(posts)
 //                }
@@ -128,6 +128,19 @@ class PostModel private constructor() {
             }else{
                 callback(null)
             }
+        }
+    }
+
+    fun resetPosts() {
+        TrainHubApplication.Globals.executorService.execute{
+            roomDatabase.postDao().deleteAllPosts()
+        }
+
+    }
+
+    fun addPostToCurrentUser(post: Post) {
+        TrainHubApplication.Globals.executorService.execute {
+            roomDatabase.postDao().insert(post)
         }
     }
 

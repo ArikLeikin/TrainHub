@@ -3,6 +3,7 @@ package com.example.trainhub.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.trainhub.TrainHubApplication
 import com.example.trainhub.models.PostModel
 import com.example.trainhub.models.UserModel
 import com.example.trainhub.models.entities.Post
@@ -19,14 +20,20 @@ class HomepageViewModel : ViewModel() {
         pm.getAllPosts { postList ->
             val postsWithUsers = mutableListOf<PostWithUser>()
             if (postList != null) {
+                pm.resetPosts()
                 postList.forEach { post ->
                     um.getUserById(post.userId) { user ->
                         postsWithUsers.add(PostWithUser(post, user))
+                        if(post.userId==TrainHubApplication.Globals.currentUser!!.id){
+                            pm.addPostToCurrentUser(post)
+                        }
                         if (postsWithUsers.size == postList.size) {
                             _posts.value = postsWithUsers
                         }
                     }
                 }
+                if(postList.isEmpty())
+                    _posts.value = listOf()
             }else {
                 um.getCurrentUser { currUser ->
                     setAllPostsByCurrentUser(currUser!!) {
