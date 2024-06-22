@@ -58,7 +58,7 @@ class PostFireBaseModel: FirebaseModel(){
             }
     }
 
-    fun getAllPostsDocument(callback: (List<Post>) -> Unit) {
+    fun getAllPostsDocument(callback: (List<Post>?) -> Unit) {
         db.collection(POSTS_COLLECTION_PATH).get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -72,7 +72,7 @@ class PostFireBaseModel: FirebaseModel(){
                     callback(posts)
                 } else {
                     Log.e(TAG, "Error getting all posts: ${task.exception}")
-                    callback(listOf())
+                    callback(null)
                 }
             }
     }
